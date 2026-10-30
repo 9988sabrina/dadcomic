@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Super Dad — Dad Jokes, Ice Skates & One Very Judgy Cat</title>
+<meta name="description" content="A laugh-out-loud comic book for kids 5–9 and the dads who embarrass them. Read-along audiobook, theme song and sing-along videos — free on YouTube.">
+<meta property="og:title" content="My Super Dad — a comic book for kids and dads">
+<meta property="og:description" content="Dad jokes, ice skates and one very judgy cat. Watch the read-along, sing the song, get the book.">
+<meta property="og:image" content="https://dadcomic.com/img/og.jpg">
+<meta property="og:url" content="https://dadcomic.com/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦸</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--sky:#3fb4f5;--sun:#ffd23f;--red:#e63946;--ink:#1d1b3a;--paper:#fffdf6;--pink:#ff8fb8;--card:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 18px/1.55 Fredoka,system-ui,sans-serif}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+h1,h2,.bang{font-family:Bangers,Impact,sans-serif;letter-spacing:.03em;font-weight:400;line-height:1}
+nav{position:sticky;top:0;z-index:10;background:var(--ink);color:#fff}
+nav .wrap{display:flex;align-items:center;gap:18px;height:56px;overflow-x:auto;white-space:nowrap}
+nav .logo{font-family:Bangers;font-size:26px;color:var(--sun);text-decoration:none;margin-right:auto}
+nav a{text-decoration:none;font-weight:600;font-size:16px}
+nav a.buy{background:var(--red);padding:7px 14px;border-radius:999px}
+.hero{background:radial-gradient(circle at 20% 20%,#7dd3ff 0,var(--sky) 45%,#1e88e5 100%);color:#fff;overflow:hidden;position:relative}
+.hero:before{content:"";position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 75% 50%,rgba(255,255,255,.08) 0 6deg,transparent 6deg 12deg)}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:56px 16px 64px}
+.hero h1{font-size:clamp(56px,9vw,112px);color:var(--sun);-webkit-text-stroke:3px var(--ink);text-shadow:6px 6px 0 var(--ink);margin:0 0 10px}
+.hero .sub{font-family:Bangers;font-size:clamp(24px,3.4vw,36px);margin:0 0 18px;text-shadow:3px 3px 0 var(--ink)}
+.hero p{font-size:20px;max-width:34em;margin:0 0 26px}
+.btns{display:flex;flex-wrap:wrap;gap:14px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:14px;font-weight:700;text-decoration:none;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+.btn.y{background:var(--sun);color:var(--ink)}.btn.w{background:#fff;color:var(--ink)}
+.cover{transform:rotate(3deg);border:6px solid #fff;border-radius:10px;box-shadow:12px 12px 0 var(--ink);max-width:420px;justify-self:center}
+.burst{position:absolute;top:-18px;right:-14px;background:var(--red);color:#fff;font-family:Bangers;font-size:22px;padding:18px 14px;border-radius:50%;transform:rotate(12deg);border:3px solid var(--ink);text-align:center;line-height:1}
+.coverbox{position:relative;justify-self:center}
+section{padding:72px 0}
+h2{font-size:clamp(40px,6vw,64px);margin:0 0 8px;color:var(--red);-webkit-text-stroke:1.5px var(--ink);text-shadow:4px 4px 0 var(--sun)}
+.lead{font-size:20px;max-width:40em;margin:0 0 32px}
+.joke{background:var(--sun);border-top:4px solid var(--ink);border-bottom:4px solid var(--ink)}
+.joke .wrap{display:flex;align-items:center;gap:24px;padding:28px 16px}
+.bubble{position:relative;background:#fff;border:4px solid var(--ink);border-radius:28px;padding:20px 28px;font-size:clamp(20px,2.6vw,28px);font-weight:700;flex:1;min-height:92px;display:flex;align-items:center}
+.bubble:after{content:"";position:absolute;left:-26px;top:30px;border:14px solid transparent;border-right:22px solid var(--ink)}
+.dadface{font-size:64px}
+.joke button{font:700 16px Fredoka;background:var(--ink);color:#fff;border:0;border-radius:12px;padding:12px 16px;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.grid figure{margin:0;background:#fff;border:3px solid var(--ink);border-radius:10px;padding:8px;box-shadow:5px 5px 0 var(--ink);transform:rotate(var(--r,0deg));transition:transform .15s}
+.grid figure:hover{transform:rotate(0) scale(1.03)}
+.grid figcaption{font-weight:600;font-size:15px;padding:8px 4px 2px}
+.vids{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.vid{background:#fff;border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:6px 6px 0 var(--ink)}
+.vid .f{position:relative;aspect-ratio:16/9;background:#000}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vid h3{margin:0;padding:14px 16px 4px;font-size:20px}
+.vid p{margin:0;padding:0 16px 16px;font-size:16px}
+.song{background:var(--ink);color:#fff}
+.song h2{color:var(--sun);text-shadow:4px 4px 0 var(--red)}
+.song .vid{color:var(--ink)}
+.song .wrap{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center}
+.chorus{background:#2c2a55;border-radius:18px;padding:26px 28px;font-size:22px;line-height:1.6;border:3px dashed var(--sun)}
+.chorus b{color:var(--sun)}
+.cast{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.who{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:18px;box-shadow:5px 5px 0 var(--ink)}
+.who .e{font-size:40px}.who h3{margin:6px 0 4px;font-size:22px}.who p{margin:0;font-size:16px}
+.buybox{background:linear-gradient(135deg,var(--pink),var(--sun));border-top:4px solid var(--ink)}
+.buybox .wrap{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center}
+.buybox img{width:260px;border:4px solid var(--ink);border-radius:8px;box-shadow:8px 8px 0 var(--ink);transform:rotate(-3deg)}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 24px;padding:0;list-style:none}
+.facts li{background:#fff;border:2px solid var(--ink);border-radius:999px;padding:6px 14px;font-weight:600;font-size:15px}
+footer{background:var(--ink);color:#c9c7e8;padding:28px 0;font-size:15px;text-align:center}
+@media (max-width:860px){.hero .wrap,.song .wrap,.buybox .wrap{grid-template-columns:1fr}.grid,.cast{grid-template-columns:repeat(2,1fr)}.vids{grid-template-columns:1fr}.cover{max-width:300px}.buybox img{width:200px}.joke .wrap{flex-wrap:wrap}.dadface{display:none}.bubble:after{display:none}}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><a class="logo" href="#top">MY SUPER DAD</a><a href="#watch">Watch</a><a href="#song">Song</a><a href="#peek">Peek inside</a><a href="#family">The family</a><a class="buy" href="https://www.amazon.com/dp/B0HPM4S3K6" target="_blank" rel="noopener">Get the book</a></div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+ <div>
+  <h1>MY SUPER DAD</h1>
+  <p class="sub">Dad jokes, ice skates &amp; one very judgy cat</p>
+  <p>P has one homework question: <b>what makes Dad super?</b> Five tests, one 47-step skating plan, a snowman disguise, a penguin costume and a cat who rates everything in paw prints. A comic book for kids 5–9 and the dads who embarrass them.</p>
+  <div class="btns"><a class="btn y" href="https://www.amazon.com/dp/B0HPM4S3K6" target="_blank" rel="noopener">📚 Get the book on Amazon</a><a class="btn w" href="#watch">▶ Watch it free</a></div>
+ </div>
+ <div class="coverbox"><img class="cover" src="img/cover.jpg" alt="My Super Dad comic book cover" width="420"><div class="burst">74<br>PAGES!</div></div>
+</div></header>
+
+<div class="joke"><div class="wrap">
+ <div class="dadface">😎</div>
+ <div class="bubble" id="joke" aria-live="polite">I'm not just handy… I'm NUTS about repairs!</div>
+ <button id="next">Another dad joke</button>
+</div></div>
+
+<section id="watch"><div class="wrap">
+ <h2>Watch &amp; read along — free</h2>
+ <p class="lead">The whole comic, voiced by a full cast. The pages turn as the story plays, so early readers can follow every word.</p>
+ <div class="vids">
+  <div class="vid"><div class="f"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/TQnxKHzIsdI" title="My Super Dad Part 1" allowfullscreen></iframe></div><h3>Part 1: What Makes You Super?</h3><p>Five tests. One broken scooter, one muddy shortcut, one tiny spider and one big storm.</p></div>
+  <div class="vid"><div class="f"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/eQfUimcB0sU" title="My Super Dad Part 2" allowfullscreen></iframe></div><h3>Part 2: Dad, Let Me Try!</h3><p>P wants to skate in the Winter Show all by herself. Dad promised: no helping. (He is not good at this.)</p></div>
+ </div>
+</div></section>
+
+<section class="song" id="song"><div class="wrap">
+ <div>
+  <h2>The theme song</h2>
+  <p class="lead">“You Try, I Cheer!” — a bouncy sing-along for every kid learning to fall down and get back up.</p>
+  <div class="chorus"><b>You try, I cheer!</b> (Oh-oh!)<br>Loudest dad in the stands this year<br>Fall down, get up, I'll still be here<br><b>You try, I cheer!</b><br><br><i>Hands! Knee! Foot! Foot!</i></div>
+ </div>
+ <div class="vid"><div class="f"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/x-S1PxCqoeY" title="You Try, I Cheer music video" allowfullscreen></iframe></div><h3>You Try, I Cheer! (lyric video)</h3><p>Sing along with P, Dad, D and the whole family.</p></div>
+</div></section>
+
+<section id="peek"><div class="wrap">
+ <h2>Peek inside</h2>
+ <p class="lead">Full-color, big-panel pages with short speech bubbles — easy for new readers, funny for grown-ups.</p>
+ <div class="grid">
+  <figure style="--r:-2deg"><img loading="lazy" src="img/p1_2.jpg" alt="Comic page: homework due Monday"><figcaption>“Dad, what makes you super?”</figcaption></figure>
+  <figure style="--r:1.5deg"><img loading="lazy" src="img/p1_5.jpg" alt="Comic page: Dad fixes the scooter"><figcaption>Test 1: fix things. (Sort of.)</figcaption></figure>
+  <figure style="--r:-1deg"><img loading="lazy" src="img/p1_14.jpg" alt="Comic page: jeep adventure"><figcaption>“This is gonna be wheel-y fun!”</figcaption></figure>
+  <figure style="--r:2deg"><img loading="lazy" src="img/p1_24.jpg" alt="Comic page: storm night"><figcaption>A dino-snore in the dark</figcaption></figure>
+  <figure style="--r:1deg"><img loading="lazy" src="img/p2_12.jpg" alt="Comic page: snowman disguise"><figcaption>“I'm just chilling.”</figcaption></figure>
+  <figure style="--r:-2deg"><img loading="lazy" src="img/p2_14.jpg" alt="Comic page: penguin brakes"><figcaption>A very tall local penguin</figcaption></figure>
+  <figure style="--r:1.5deg"><img loading="lazy" src="img/p2_27.jpg" alt="Comic page: skate show"><figcaption>“Next skater: P!”</figcaption></figure>
+  <figure style="--r:-1deg"><img loading="lazy" src="img/p2_34.jpg" alt="Comic page: can I help you"><figcaption>“Dad, can I help YOU?”</figcaption></figure>
+ </div>
+</div></section>
+
+<section id="family" style="background:#eaf7ff;border-top:4px solid var(--ink)"><div class="wrap">
+ <h2>Meet the family</h2>
+ <p class="lead">One dad, two sisters and a house full of opinionated animals.</p>
+ <div class="cast">
+  <div class="who"><div class="e">😎</div><h3>Dad</h3><p>Biker jacket, sunglasses, 47-step plans, and a dad joke for every occasion.</p></div>
+  <div class="who"><div class="e">⛸️</div><h3>P</h3><p>Curly hair, big questions. Wants to try it herself — and usually does.</p></div>
+  <div class="who"><div class="e">🎧</div><h3>D</h3><p>Big sister home from college. Few words, sharp eyes, secret sketchbook.</p></div>
+  <div class="who"><div class="e">🐱</div><h3>Miao Sando</h3><p>Handsome, lean, very judgy. Rates everything in paw prints.</p></div>
+  <div class="who"><div class="e">🦜</div><h3>Nori</h3><p>The parrot. Chief enforcer of NO HELPING! and NO JOKES!</p></div>
+  <div class="who"><div class="e">🐩</div><h3>Duoduo</h3><p>White poodle. Loyal waiter, enthusiastic cheerleader.</p></div>
+  <div class="who"><div class="e">🐔</div><h3>The chickens</h3><p>Six of them. Always standing in a very serious row.</p></div>
+  <div class="who"><div class="e">🐣</div><h3>Peep</h3><p>The new chick. Wears a tiny cape. Egg-cellent.</p></div>
+ </div>
+</div></section>
+
+<section class="buybox"><div class="wrap">
+ <img src="img/cover.jpg" alt="My Super Dad book">
+ <div>
+  <h2>Get the book</h2>
+  <ul class="facts"><li>Ages 5–9</li><li>74 full-color pages</li><li>7 × 10 in paperback</li><li>Two stories in one</li><li>Bonus joke cards</li></ul>
+  <p class="lead">Perfect for read-aloud nights, early readers, and any dad who thinks he's funny.</p>
+  <a class="btn y" href="https://www.amazon.com/dp/B0HPM4S3K6" target="_blank" rel="noopener">📚 Buy on Amazon — $14.99</a>
+ </div>
+</div></section>
+
+<footer>© 2026 Phoebie Wang · My Super Dad · <a href="https://www.youtube.com/channel/UCxfCozbxSOhsVxKwdtsfzkQ" target="_blank" rel="noopener">YouTube</a> · <a href="https://www.phoebiewang.com" target="_blank" rel="noopener">phoebiewang.com</a><br><small>Videos and music made with the help of AI tools. Prices may change.</small></footer>
+
+<script>
+const J=["I'm not just handy… I'm NUTS about repairs!","What do you call a sleeping dinosaur? A dino-snore.","The sky is blue because it's feeling blue.","The hens stopped laying? They're on eggs-tended vacation.","Hold on tight! This is gonna be wheel-y fun!","You're egg-cellent.","I made a CHART. It's a real chart-topper!","Skating rule one: be cool. Lucky for you, I'm ice cold.","Falling? You really ice-d it!","Don't mind me. I'm just chilling.","I'm having a meltdown.","Penguins never get lost. They find the right slide!","I'm fine! Just testing gravity.","Best day ever. I'm feeling ice-static!","Snow way you're stopping now!"];
+let i=0;const el=document.getElementById('joke');
+function next(){i=(i+1)%J.length;el.textContent=J[i]}
+document.getElementById('next').onclick=next;setInterval(next,9000);
+</script>
+</body>
+</html>
