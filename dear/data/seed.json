@@ -1,0 +1,173 @@
+{
+  "label": "SAMPLE SEED — fictional notes written for this prototype. Not visitor posts. Do not present them as real.",
+  "entries": [
+    {
+      "id": "sample-01",
+      "sample": true,
+      "kind": "letter",
+      "salutation": "Dad",
+      "presence": "living",
+      "lang": "en",
+      "countryCode": "US",
+      "text": "I never said this without a joke in front of it. You showing up, even late, even loud, was the part I counted on. I'm saying it plain: thank you for staying.",
+      "image": null,
+      "alt": null,
+      "reactions": { "heart": 4, "hug": 2, "star": 1 }
+    },
+    {
+      "id": "sample-02",
+      "sample": true,
+      "kind": "letter",
+      "salutation": "Dad",
+      "presence": "heaven",
+      "lang": "en",
+      "countryCode": "GB",
+      "text": "The kettle still clicks the way you set it. I laugh at the wrong moment on purpose now. If you can hear one line: I kept your terrible puns, and I love you.",
+      "image": null,
+      "alt": null,
+      "reactions": { "heart": 6, "hug": 3, "star": 5 }
+    },
+    {
+      "id": "sample-03",
+      "sample": true,
+      "kind": "letter",
+      "salutation": "爸爸",
+      "presence": "living",
+      "lang": "zh",
+      "countryCode": "CN",
+      "text": "有些话我当面总是说不出口。你每天下班还来接我的那些晚上，我都记得。谢谢你一直当我的超人。",
+      "image": null,
+      "alt": null,
+      "reactions": { "heart": 5, "hug": 1, "star": 2 }
+    },
+    {
+      "id": "sample-04",
+      "sample": true,
+      "kind": "letter",
+      "salutation": "爸",
+      "presence": "heaven",
+      "lang": "zh",
+      "countryCode": "TW",
+      "text": "院子里的桂花开了。我想告诉你，我过得还好，也会记得把话说完。想你。",
+      "image": null,
+      "alt": null,
+      "reactions": { "heart": 3, "hug": 4, "star": 4 }
+    },
+    {
+      "id": "sample-05",
+      "sample": true,
+      "kind": "drawing",
+      "salutation": "Daddy",
+      "presence": "living",
+      "lang": "en",
+      "countryCode": "CA",
+      "text": "My dad's real cape is the car that waits after practice.",
+      "image": "img/drawings/cape.svg",
+      "alt": {
+        "en": "Crayon drawing of a smiling dad in sunglasses and a red cape under a yellow sun.",
+        "zh": "蜡笔图：戴墨镜、披红披风的爸爸，站在黄太阳下面。"
+      },
+      "reactions": { "heart": 7, "hug": 2, "star": 3 }
+    },
+    {
+      "id": "sample-06",
+      "sample": true,
+      "kind": "letter",
+      "salutation": "Papa",
+      "presence": "heaven",
+      "lang": "en",
+      "countryCode": "AU",
+      "text": "The beach is still too bright without your hat in the picture. I took the long walk and told you about my week. You would have made a speech. I love you.",
+      "image": null,
+      "alt": null,
+      "reactions": { "heart": 4, "hug": 2, "star": 3 }
+    },
+    {
+      "id": "sample-07",
+      "sample": true,
+      "kind": "drawing",
+      "salutation": "爸爸",
+      "presence": "living",
+      "lang": "zh",
+      "countryCode": "SG",
+      "text": "周末的煎蛋，总是做成笑脸。",
+      "image": "img/drawings/egg.svg",
+      "alt": {
+        "en": "Crayon drawing of a smiley fried egg in a pan, next to a small waving dad.",
+        "zh": "蜡笔图：平底锅里一张笑脸煎蛋，旁边一个小爸爸在挥手。"
+      },
+      "reactions": { "heart": 3, "hug": 1, "star": 2 }
+    },
+    {
+      "id": "sample-08",
+      "sample": true,
+      "kind": "letter",
+      "salutation": "Daddy",
+      "presence": "living",
+      "lang": "en",
+      "countryCode": "NG",
+      "text": "I used to be embarrassed when you sang too loud at school. I hear that song in my head on hard days. Thank you for being impossible to ignore.",
+      "image": null,
+      "alt": null,
+      "reactions": { "heart": 5, "hug": 3, "star": 1 }
+    },
+    {
+      "id": "sample-09",
+      "sample": true,
+      "kind": "letter",
+      "salutation": "老爸",
+      "presence": "heaven",
+      "lang": "zh",
+      "countryCode": "CN",
+      "text": "你的工具箱还在阳台。我会修那盏灯，虽然肯定没有你修得好。这次我想先说我爱你。",
+      "image": null,
+      "alt": null,
+      "reactions": { "heart": 6, "hug": 2, "star": 4 }
+    },
+    {
+      "id": "sample-10",
+      "sample": true,
+      "kind": "drawing",
+      "salutation": "Dad",
+      "presence": "living",
+      "lang": "en",
+      "countryCode": "MX",
+      "text": "He claps before I even stand up on the skates.",
+      "image": "img/drawings/skates.svg",
+      "alt": {
+        "en": "Crayon drawing of a tall dad and a child holding hands on a patch of ice.",
+        "zh": "蜡笔图：高高的爸爸和孩子在一小片冰上牵着手。"
+      },
+      "reactions": { "heart": 2, "hug": 2, "star": 1 }
+    },
+    {
+      "id": "sample-11",
+      "sample": true,
+      "kind": "letter",
+      "salutation": "Dad",
+      "presence": "heaven",
+      "lang": "en",
+      "countryCode": "IE",
+      "text": "The match was on and nobody argued with the referee. It felt wrong. I saved you the last biscuit anyway. I miss you.",
+      "image": null,
+      "alt": null,
+      "reactions": { "heart": 3, "hug": 1, "star": 2 }
+    },
+    {
+      "id": "sample-12",
+      "sample": true,
+      "kind": "drawing",
+      "salutation": "爸",
+      "presence": "heaven",
+      "lang": "zh",
+      "countryCode": "MY",
+      "text": "爸爸变成了那颗最亮的星。我还会朝它挥手。",
+      "image": "img/drawings/star.svg",
+      "alt": {
+        "en": "Crayon drawing of a child waving up at a large gold star above a small house.",
+        "zh": "蜡笔图：孩子对着小屋上方一颗很大的金星挥手。"
+      },
+      "reactions": { "heart": 8, "hug": 3, "star": 6 }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800" role="img">
+  <title>Dad in a cape</title>
+  <rect width="800" height="800" fill="#fffdf6"/>
+  <circle cx="640" cy="150" r="64" fill="#ffd23f" stroke="#1d1b3a" stroke-width="8"/>
+  <g stroke="#ffd23f" stroke-width="12" stroke-linecap="round">
+    <path d="M640 48v28M640 224v28M520 150h28M732 150h28M548 72l22 22M732 228l-22-22M548 228l22-22M710 72l22 22"/>
+  </g>
+  <path d="M70 690c180-50 480-50 670 20" fill="none" stroke="#5dcaa5" stroke-width="18" stroke-linecap="round"/>
+  <path d="M250 430c-20 90-10 180 40 230 30-70 70-90 110-70 20 80 70 90 100 40-10-90 10-170 40-220-80 30-210 30-290 20z" fill="#e63946" stroke="#1d1b3a" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M400 360v210M400 560l-70 120M400 560l80 120M400 430l-110-70M400 430l120-60" fill="none" stroke="#1d1b3a" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="400" cy="280" r="72" fill="#ffd7b5" stroke="#1d1b3a" stroke-width="8"/>
+  <rect x="348" y="258" width="46" height="30" rx="8" fill="#1d1b3a"/>
+  <rect x="406" y="258" width="46" height="30" rx="8" fill="#1d1b3a"/>
+  <path d="M394 272h12" stroke="#1d1b3a" stroke-width="8" stroke-linecap="round"/>
+  <path d="M366 312c22 24 48 24 70 0" fill="none" stroke="#1d1b3a" stroke-width="7" stroke-linecap="round"/>
+  <path d="M150 168c0-26 40-26 40 0 0-26 40-26 40 0 0 30-40 54-40 70 0-16-40-40-40-70z" fill="#ff8fb8" stroke="#1d1b3a" stroke-width="7"/>
+</svg>
