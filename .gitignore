@@ -1,2 +1,3 @@
 *.ttf
+!fonts/*.ttf
 .DS_Store

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" data-ui="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Turn into a gift · Dear Super Dad</title>
+<meta name="description" content="A mug, a shirt, or a card from a note to Dad. Printing and checkout are not connected.">
+<link rel="canonical" href="https://dadcomic.com/dear/gift/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦸</text></svg>">
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem("dear-super-dad-lang");
+    var lang = saved === "zh" || saved === "en" ? saved : ((navigator.language || "").toLowerCase().indexOf("zh") === 0 ? "zh" : "en");
+    document.documentElement.lang = lang === "zh" ? "zh-Hans" : "en";
+    document.documentElement.dataset.ui = lang;
+  } catch (e) {
+    document.documentElement.dataset.ui = "en";
+  }
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,620;1,9..144,500&family=Noto+Serif+SC:wght@500;600&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/dear.css">
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="logo" href="../../">My Super Dad</a>
+  <a href="../#wall"><span data-show="en">Wall</span><span data-show="zh">墙</span></a>
+  <a href="../#write"><span data-show="en">Write</span><span data-show="zh">写</span></a>
+  <a href="./" aria-current="page"><span data-show="en">Gifts</span><span data-show="zh">礼物</span></a>
+  <button type="button" class="lang-btn" id="lang-toggle"><span data-show="en">中文</span><span data-show="zh">EN</span></button>
+  <a class="buy" href="https://www.amazon.com/dp/B0HPM4S3K6" target="_blank" rel="noopener"><span data-show="en">Get the book</span><span data-show="zh">去买书</span></a>
+</div></nav>
+
+<header class="hero"><div class="wrap hero-grid" style="padding:32px 0 40px">
+  <div>
+    <p class="issue">Dear Super Dad · 说给爸爸听 — Issue #1</p>
+    <h1>A small gift</h1>
+    <p class="zh-name" data-i18n="giftTitle">Turn a note into a gift</p>
+    <p class="lede" data-i18n="giftLede">A mug, a shirt, or a card, using the note you picked. Printing and payment are not connected. Nothing here can be bought.</p>
+    <a class="btn w" href="../#wall" data-i18n="backWall">Back to the wall</a>
+  </div>
+</div></header>
+
+<main><section><div class="wrap">
+  <h2 id="gift-selected" data-i18n="giftSelected" hidden>The note you picked</h2>
+  <div id="gift-card"></div>
+  <p class="note" id="gift-missing" data-i18n="giftMissing" hidden>Pick a note from the wall first. The gifts still can't be bought — this page only shows the idea.</p>
+
+  <div class="products" style="margin-top:22px">
+    <article class="product panel">
+      <p class="mark" aria-hidden="true">☕</p>
+      <h3 data-i18n="mug">Mug</h3>
+      <p data-i18n="mugBody">A morning mug with the note on the outside. No print shop is connected.</p>
+      <span class="soon" data-i18n="noCheckout">No checkout. No card number. No order.</span>
+    </article>
+    <article class="product panel">
+      <p class="mark" aria-hidden="true">👕</p>
+      <h3 data-i18n="shirt">Shirt</h3>
+      <p data-i18n="shirtBody">A soft shirt, the words small on the chest. No sizes and no checkout.</p>
+      <span class="soon" data-i18n="noCheckout">No checkout. No card number. No order.</span>
+    </article>
+    <article class="product panel">
+      <p class="mark" aria-hidden="true">💌</p>
+      <h3 data-i18n="cardProduct">Card</h3>
+      <p data-i18n="cardBody">A folded card you could hand to him, or keep. Paper choices come later.</p>
+      <span class="soon" data-i18n="noCheckout">No checkout. No card number. No order.</span>
+    </article>
+  </div>
+
+  <div class="crisis" id="crisis">
+    <h3 data-i18n="crisisTitle">If this feels like too much</h3>
+    <div data-show="en">
+      <p><b>Dear Super Dad is not a crisis service.</b> If you might hurt yourself, please reach a person now.</p>
+      <ul>
+        <li>United States and Canada: call or text <a href="tel:988">988</a>.</li>
+        <li>Mainland China: <a href="tel:12356">12356</a>. Beijing crisis line, 24 hours: <a href="tel:01082951332">010-82951332</a> or <a href="tel:8008101117">800-810-1117</a>.</li>
+        <li>Anywhere else: <a href="https://www.iasp.info/suicidalthoughts/" target="_blank" rel="noopener">find a local helpline</a>.</li>
+      </ul>
+    </div>
+    <div data-show="zh">
+      <p><b>「说给爸爸听」不是危机援助服务。</b> 如果你可能伤害自己，请现在就联系一个人。</p>
+      <ul>
+        <li>美国和加拿大：拨打或发短信 <a href="tel:988">988</a>。</li>
+        <li>中国大陆：<a href="tel:12356">12356</a>。北京心理危机热线（24 小时）：<a href="tel:01082951332">010-82951332</a> 或 <a href="tel:8008101117">800-810-1117</a>。</li>
+        <li>其他地区：<a href="https://www.iasp.info/suicidalthoughts/" target="_blank" rel="noopener">查找当地援助热线</a>。</li>
+      </ul>
+    </div>
+  </div>
+</div></section></main>
+
+<footer><div class="wrap">
+  <p>© 2026 Phoebie Wang · My Super Dad · <a href="../../" data-i18n="footerHome">Home</a> · <a href="../">Dear Super Dad</a></p>
+</div></footer>
+
+<dialog id="share-dialog" aria-labelledby="share-title">
+  <div class="dialog-head">
+    <h2 id="share-title" tabindex="-1" data-i18n="shareTitle">Share card</h2>
+    <button type="button" class="icon-btn" id="share-close" data-i18n="close">Close</button>
+  </div>
+  <div class="dialog-body">
+    <p class="share-status" role="status"></p>
+    <div class="previews"></div>
+    <div class="btns">
+      <button type="button" class="btn y" data-download="9:16" disabled data-i18n="download916">Download 9:16</button>
+      <button type="button" class="btn w" data-download="4:5" disabled data-i18n="download45">Download 4:5</button>
+    </div>
+  </div>
+</dialog>
+<script type="module" src="../js/gift.js"></script>
+</body>
+</html>

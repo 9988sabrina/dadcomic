@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en" data-ui="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dear Super Dad · 说给爸爸听</title>
+<meta name="description" content="Say what you never said. A prototype wall of sample notes and drawings for dads who are living, and dads who are in heaven.">
+<meta property="og:title" content="Dear Super Dad · 说给爸爸听">
+<meta property="og:description" content="Say what you never said. 那些没说出口的话，说给爸爸听。">
+<meta property="og:url" content="https://dadcomic.com/dear/">
+<meta property="og:image" content="https://dadcomic.com/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://dadcomic.com/dear/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦸</text></svg>">
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem("dear-super-dad-lang");
+    var lang = saved === "zh" || saved === "en" ? saved : ((navigator.language || "").toLowerCase().indexOf("zh") === 0 ? "zh" : "en");
+    document.documentElement.lang = lang === "zh" ? "zh-Hans" : "en";
+    document.documentElement.dataset.ui = lang;
+  } catch (e) {
+    document.documentElement.dataset.ui = "en";
+  }
+})();
+</script>
+<link rel="preload" as="image" href="img/cover.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,620;1,9..144,500&family=Noto+Serif+SC:wght@500;600&family=Outfit:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,620;1,9..144,500&family=Noto+Serif+SC:wght@500;600&family=Outfit:wght@400;500;600&display=swap"></noscript>
+<link rel="stylesheet" href="css/dear.css">
+<link rel="stylesheet" href="css/stage.css">
+<script>
+if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  document.documentElement.classList.add("will-motion");
+}
+</script>
+</head>
+<body>
+<div id="boot" role="status" aria-live="polite">
+  <div class="boot-inner">
+    <p><span data-show="en">Opening</span><span data-show="zh">翻开</span></p>
+    <div class="boot-line" aria-hidden="true"><span id="boot-bar"></span></div>
+  </div>
+</div>
+<div id="cursor" aria-hidden="true"></div>
+<div id="painted-sky" aria-hidden="true"><div class="sky-scrim"></div></div>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<canvas id="rise-layer" aria-hidden="true"></canvas>
+<div class="grade" aria-hidden="true"></div>
+<div class="turn" aria-hidden="true"></div>
+<a class="sr" href="#wall">Skip to the wall</a>
+<nav><div class="wrap">
+  <a class="logo" href="../">My Super Dad</a>
+  <a href="#wall"><span data-show="en">Wall</span><span data-show="zh">墙</span></a>
+  <a href="#write"><span data-show="en">Write</span><span data-show="zh">写</span></a>
+  <a href="gift/"><span data-show="en">Gifts</span><span data-show="zh">礼物</span></a>
+  <button type="button" class="lang-btn" id="sound-toggle" aria-pressed="false">Sound off</button>
+  <button type="button" class="lang-btn" id="lang-toggle" aria-label="Language"><span data-show="en">中文</span><span data-show="zh">EN</span></button>
+  <a class="buy" href="https://www.amazon.com/dp/B0HPM4S3K6" target="_blank" rel="noopener"><span data-show="en">Get the book</span><span data-show="zh">去买书</span></a>
+</div></nav>
+
+<h1 class="sr">Dear Super Dad · 说给爸爸听</h1>
+<section class="chapter" id="chapter-book">
+  <div class="book-pin">
+    <canvas id="book-gl" class="book-gl" aria-hidden="true"></canvas>
+    <div class="book-scene">
+      <div class="book-3d">
+        <div class="book-inside">
+          <p class="kinetic" aria-label="Say what you never said"><span>Say</span><span>what</span><span>you</span><span>never</span><span>said.</span></p>
+          <p class="kinetic-zh" aria-label="说出从没说出口的话"><span>说出</span><span>从没</span><span>说出口</span><span>的话</span></p>
+        </div>
+        <div class="book-cover">
+          <img src="img/cover.webp" width="900" height="1294" alt="My Super Dad comic cover by Phoebie Wang." fetchpriority="high" crossorigin="anonymous">
+          <div class="sheen" aria-hidden="true"></div>
+          <div class="book-back" aria-hidden="true"><p>My Super Dad</p><p>说给爸爸听</p></div>
+        </div>
+      </div>
+    </div>
+    <p class="scroll-hint"><span data-show="en">Scroll to open</span><span data-show="zh">向下翻开</span></p>
+    <button type="button" id="page-zoom" hidden><span data-show="en">Read the page</span><span data-show="zh">看这一页</span></button>
+  </div>
+</section>
+
+<section class="chapter" id="chapter-cast">
+  <div class="cast-pin">
+    <h2 class="cast-title"><span data-split data-show="en">Four of them. One very loud afternoon.</span><span data-split data-show="zh">四个人。一个很吵的下午。</span></h2>
+    <div class="cast-layers">
+      <div class="layer sun" aria-hidden="true"></div>
+      <img class="layer char dad" src="img/hosts/dad-cut.webp" width="360" height="1093" alt="Dad, in a flame helmet and black jacket, skating." loading="lazy" decoding="async">
+      <img class="layer char dory" src="img/hosts/dory-cut.webp" width="351" height="1050" alt="Dory, the older sister, headphones around her neck." loading="lazy" decoding="async">
+      <img class="layer char p" src="img/hosts/p-cut.webp" width="674" height="968" alt="P, ten years old, arms open in a pink skating dress." loading="lazy" decoding="async">
+      <img class="layer char miao" src="img/hosts/miao-cut.webp" width="372" height="1072" alt="Miao Sando, a slim white cat in a black suit and sunglasses." loading="lazy" decoding="async">
+      <p class="who p"><span data-show="en">Let me try it. I’ll fall, then I’ll know.</span><span data-show="zh">让我自己试试。摔倒了，我就懂了。</span></p>
+      <p class="who dad"><span data-show="en">I’m not just handy. I’m nuts about repairs.</span><span data-show="zh">我不只会修。我是螺母级的。</span></p>
+      <p class="who dory"><span data-show="en">Dad. The helmet is not a personality.</span><span data-show="zh">爸。头盔不是性格。</span></p>
+      <p class="who miao"><span data-show="en">Six out of ten. The jacket is doing the work.</span><span data-show="zh">十分里六分。分都在夹克上。</span></p>
+    </div>
+    <p class="cast-caption">Art by Phoebie Wang · cover. Portraits for this scroll.</p>
+  </div>
+</section>
+
+<section class="chapter night-pin">
+  <h2><span data-split data-show="en">Some dads become the light you look for.</span><span data-split data-show="zh">有的爸爸，变成了你要找的那盏光。</span></h2>
+</section>
+
+<div class="banner"><span data-show="en">Prototype. Every note on this wall is a sample we wrote, so you can see the layout. None of them were posted by a visitor.</span><span data-show="zh">这是原型。墙上这些话都是我们写的示例，用来看版式。没有一条是访客发布的。</span></div>
+
+<main>
+<section id="wall"><div class="sky-well" aria-hidden="true"></div><div class="wrap">
+  <h2 data-split data-i18n="wallTitle">The wall</h2>
+  <p class="lead" data-i18n="wallLede">Sample letters and drawings. Filter by where Dad is, and by language. Country counts are samples too.</p>
+  <div class="filters" role="group" aria-label="Filters">
+    <button type="button" data-filter-presence="all" aria-pressed="true" data-i18n="filterAll">All</button>
+    <button type="button" data-filter-presence="living" aria-pressed="false" data-i18n="filterLiving">🌤️ Living</button>
+    <button type="button" data-filter-presence="heaven" aria-pressed="false" data-i18n="filterHeaven">⭐ In heaven</button>
+    <button type="button" data-filter-lang="all" aria-pressed="true" data-i18n="filterLangAll">All languages</button>
+    <button type="button" data-filter-lang="en" aria-pressed="false" data-i18n="filterEn">English</button>
+    <button type="button" data-filter-lang="zh" aria-pressed="false" data-i18n="filterZh">中文</button>
+  </div>
+  <div class="board">
+    <aside class="counts">
+      <h2 data-i18n="countsTitle">By country</h2>
+      <p class="help" data-i18n="countsHelp">Country only. Click a row to filter. These counts are samples.</p>
+      <ul class="count-list" id="count-list"></ul>
+    </aside>
+    <div>
+      <p id="wall-status" data-i18n="loading">Loading sample notes…</p>
+      <div class="night-sky" id="night-sky" hidden>
+        <p class="night-count" id="night-count"></p>
+        <div class="night-stars" id="night-stars" aria-hidden="true"></div>
+      </div>
+      <div class="wall" id="wall-cards" aria-live="polite"></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="write" id="write"><div class="wrap">
+  <h2 data-i18n="formTitle">Write something</h2>
+  <p class="sheet-flag"><span class="sfx" aria-hidden="true">psst</span> <span data-show="en">A blank panel, for one letter.</span><span data-show="zh">空白的一格，留给一封信。</span></p>
+  <p class="lead" data-i18n="formLede">This form is a preview. Nothing you type is sent, saved, or put on the wall.</p>
+  <p class="note age" data-i18n="ageNote">You need to be 13 or older to post.</p>
+  <p class="note" data-i18n="parentsNote">A parent or guardian can upload a drawing their child made. Skip full names, schools, and faces.</p>
+
+  <form id="write-form" class="comic-sheet" novalidate autocomplete="off">
+    <div id="form-errors" class="form-errors" hidden role="alert" tabindex="-1"></div>
+
+    <div class="form-grid">
+      <label class="field">
+        <span class="req" data-i18n="salutationLabel">What do you call him?</span>
+        <select name="salutation">
+          <option value="" data-i18n="salutationPlaceholder">Choose one</option>
+          <option>Dad</option>
+          <option>Daddy</option>
+          <option>Papa</option>
+          <option>Baba</option>
+          <option>Pops</option>
+          <option>爸爸</option>
+          <option>爸</option>
+          <option>老爸</option>
+          <option>爹地</option>
+          <option>父亲</option>
+          <option value="other" data-i18n="salutationOther">Other</option>
+        </select>
+      </label>
+      <label class="field" id="custom-salutation-field" hidden>
+        <span class="req" data-i18n="salutationCustom">Your word for him</span>
+        <input name="salutationCustom" maxlength="16" autocomplete="off">
+      </label>
+    </div>
+
+    <fieldset>
+      <legend class="req" data-i18n="presenceLabel">Living, or in heaven?</legend>
+      <div class="choices two">
+        <label class="choice">
+          <input type="radio" name="presence" value="living">
+          <span><b data-i18n="presenceLiving">Living</b><small data-i18n="presenceLivingHelp">He is still here.</small></span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="presence" value="heaven">
+          <span><b data-i18n="presenceHeaven">In heaven</b><small data-i18n="presenceHeavenHelp">He isn't here anymore. We mark that with a star.</small></span>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="req" data-i18n="langLabel">Language of your words</legend>
+      <div class="choices two">
+        <label class="choice"><input type="radio" name="lang" value="en"><span data-i18n="langEn">English</span></label>
+        <label class="choice"><input type="radio" name="lang" value="zh"><span data-i18n="langZh">中文</span></label>
+      </div>
+    </fieldset>
+
+    <label class="field">
+      <span class="req" data-i18n="countryLabel">Country</span>
+      <select name="country">
+        <option value="" data-i18n="countryPlaceholder">Choose a country</option>
+      </select>
+      <span class="help" data-i18n="countryHelp">Country only. We never ask for a city or an address.</span>
+    </label>
+
+    <fieldset>
+      <legend data-i18n="kindLabel">A letter or a drawing?</legend>
+      <div class="choices two">
+        <label class="choice"><input type="radio" name="kind" value="letter" checked><span data-i18n="kindLetter">A letter</span></label>
+        <label class="choice"><input type="radio" name="kind" value="drawing"><span data-i18n="kindDrawing">A drawing</span></label>
+      </div>
+    </fieldset>
+
+    <div id="letter-fields">
+      <label class="field">
+        <span class="req" data-i18n="letterLabel">The words</span>
+        <textarea name="text" maxlength="300" data-i18n="letterPlaceholder" data-i18n-attr="placeholder" aria-describedby="counter"></textarea>
+      </label>
+      <p class="counter" id="counter">0 / 300 characters</p>
+    </div>
+
+    <div id="drawing-fields" hidden>
+      <p class="sheet-flag" aria-hidden="true"><span data-show="en">YOUR PAGE</span><span data-show="zh">你的一页</span></p>
+      <label class="field">
+        <span class="req" data-i18n="uploadLabel">Upload a drawing</span>
+        <input type="file" name="drawing" accept="image/png,image/jpeg,image/gif,image/webp">
+      </label>
+      <p class="help" data-i18n="uploadHelp">PNG, JPG, GIF, or WebP, up to 8 MB. The file stays in this browser. It is not uploaded.</p>
+      <div id="image-preview" hidden>
+        <img id="image-preview-img" alt="">
+        <button type="button" class="btn w" id="remove-image" data-i18n="removeImage">Remove image</button>
+      </div>
+    </div>
+
+    <fieldset>
+      <legend data-i18n="privacyLabel">Who can see this?</legend>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="privacy" value="only_me">
+          <span><b data-i18n="privacyOnly">Only me</b><small data-i18n="privacyOnlyHelp">Not on the wall, and the team does not read it. This prototype does not save it either.</small></span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="privacy" value="team" checked>
+          <span><b data-i18n="privacyTeam">Team only</b><small data-i18n="privacyTeamHelp">Suggested. The My Super Dad team could read it. It does not go on the public wall.</small></span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="privacy" value="public">
+          <span><b data-i18n="privacyPublic">Public wall</b><small data-i18n="privacyPublicHelp">Anyone could see it on the wall. When this is live, a person checks it first.</small></span>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend data-i18n="consentLegend">How may we use it? All optional, all unchecked.</legend>
+      <div class="choices">
+        <label class="check"><input type="checkbox" name="consent_wall"><span data-i18n="consentWall">It's OK to show this on the public wall.</span></label>
+        <label class="check"><input type="checkbox" name="consent_video"><span data-i18n="consentVideo">It's OK to use this in videos.</span></label>
+        <label class="check"><input type="checkbox" name="consent_products"><span data-i18n="consentProducts">It's OK to use this on products (mugs, shirts, cards).</span></label>
+      </div>
+      <p class="help" data-i18n="consentHelp">Leave these off if you only needed to write it down.</p>
+    </fieldset>
+
+    <button class="btn y" type="submit" data-i18n="submit">Preview submit — nothing is sent</button>
+
+    <div id="form-result" class="form-result" hidden>
+      <h3 id="form-result-title" data-i18n="notSentTitle">Not sent</h3>
+      <p id="form-result-body" data-i18n="notSentBody">Your words are still in the form on this page. They were not sent to a server, and they were not added to the wall. If you chose a picture, it was not uploaded.</p>
+      <p><button type="button" class="btn w" id="copy-words" data-i18n="copy">Copy my words</button> <span id="copy-status" role="status"></span></p>
+    </div>
+  </form>
+
+  <div class="crisis" id="crisis">
+    <h3 data-i18n="crisisTitle">If this feels like too much</h3>
+    <div data-show="en">
+      <p><b>Dear Super Dad is not a crisis service.</b> If writing this brings up more than you can hold, you can stop. If you might hurt yourself, please reach a person now.</p>
+      <ul>
+        <li>United States and Canada: call or text <a href="tel:988">988</a>.</li>
+        <li>Mainland China: <a href="tel:12356">12356</a> for psychological support. Beijing crisis line, 24 hours: <a href="tel:01082951332">010-82951332</a> (mobile) or <a href="tel:8008101117">800-810-1117</a> (landline).</li>
+        <li>Anywhere else: <a href="https://www.iasp.info/suicidalthoughts/" target="_blank" rel="noopener">find a local helpline</a>.</li>
+      </ul>
+    </div>
+    <div data-show="zh">
+      <p><b>「说给爸爸听」不是危机援助服务。</b> 如果写这些话让你撑不住，可以停下来。如果你可能伤害自己，请现在就联系一个人。</p>
+      <ul>
+        <li>美国和加拿大：拨打或发短信 <a href="tel:988">988</a>。</li>
+        <li>中国大陆：心理援助热线 <a href="tel:12356">12356</a>。北京心理危机热线（24 小时）：手机 <a href="tel:01082951332">010-82951332</a>，座机 <a href="tel:8008101117">800-810-1117</a>。</li>
+        <li>其他地区：<a href="https://www.iasp.info/suicidalthoughts/" target="_blank" rel="noopener">查找当地援助热线</a>。</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p class="footer-crisis"><span data-show="en">Dear Super Dad is not a crisis service. If you might hurt yourself, the <a href="#crisis">note above</a> lists people you can call.</span><span data-show="zh">「说给爸爸听」不是危机援助服务。如果你可能伤害自己，<a href="#crisis">上面的说明</a>里有可以拨打的电话。</span></p>
+  <p>© 2026 Phoebie Wang · My Super Dad · <a href="../" data-i18n="footerHome">Home</a> · <a href="https://www.youtube.com/channel/UCxfCozbxSOhsVxKwdtsfzkQ" target="_blank" rel="noopener">YouTube</a> · <a href="https://www.phoebiewang.com" target="_blank" rel="noopener">phoebiewang.com</a></p>
+</div></footer>
+
+<dialog id="share-dialog" aria-labelledby="share-title">
+  <div class="dialog-head">
+    <h2 id="share-title" tabindex="-1" data-i18n="shareTitle">Share card</h2>
+    <button type="button" class="icon-btn" id="share-close" data-i18n="close">Close</button>
+  </div>
+  <div class="dialog-body">
+    <p class="share-status" role="status"></p>
+    <div class="previews"></div>
+    <div class="btns">
+      <button type="button" class="btn y" data-download="9:16" disabled data-i18n="download916">Download 9:16</button>
+      <button type="button" class="btn w" data-download="4:5" disabled data-i18n="download45">Download 4:5</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="page-zoom-view">
+  <button type="button" class="btn w" id="page-zoom-close"><span data-show="en">Close</span><span data-show="zh">关闭</span></button>
+  <img src="../img/art/comic_page.webp" width="1050" height="1400" alt="Comic page 12. Dad fixes P's bicycle, then Dory and Miao Sando score the afternoon." crossorigin="anonymous">
+</dialog>
+<div id="reader" hidden>
+  <button type="button" class="btn w" id="reader-close"><span data-show="en">Close</span><span data-show="zh">关闭</span></button>
+  <article id="reader-copy"></article>
+</div>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script type="module" src="js/app.js?v=4"></script>
+</body>
+</html>

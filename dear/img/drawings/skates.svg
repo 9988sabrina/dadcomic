@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800" role="img">
+  <title>Skating together</title>
+  <rect width="800" height="800" fill="#fffdf6"/>
+  <ellipse cx="400" cy="620" rx="300" ry="70" fill="#c7ecff" stroke="#1d1b3a" stroke-width="8"/>
+  <path d="M160 600c80-30 400-30 500 16" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+  <g fill="none" stroke="#1d1b3a" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M300 250v170M300 420l-50 90M300 420l40 100M300 320l70 20"/>
+    <path d="M470 300v150M470 450l-30 80M470 450l50 70M470 360l-100-20"/>
+  </g>
+  <circle cx="300" cy="190" r="58" fill="#ffd7b5" stroke="#1d1b3a" stroke-width="8"/>
+  <circle cx="470" cy="250" r="42" fill="#ffd7b5" stroke="#1d1b3a" stroke-width="8"/>
+  <path d="M276 184h16M312 184h16M456 246h12M484 246h12" stroke="#1d1b3a" stroke-width="6" stroke-linecap="round"/>
+  <path d="M286 208c10 10 22 10 32 0M460 266c8 8 16 8 24 0" fill="none" stroke="#1d1b3a" stroke-width="5" stroke-linecap="round"/>
+  <rect x="250" y="176" width="100" height="16" rx="8" fill="#1d1b3a"/>
+  <path d="M230 520h90M430 530h80" stroke="#e63946" stroke-width="10" stroke-linecap="round"/>
+  <path d="M120 180c30 10 40 40 20 60M680 160c-36 16-40 54-16 74" fill="none" stroke="#3fb4f5" stroke-width="8" stroke-linecap="round"/>
+  <path d="M560 120l18 28h-36z" fill="#ffd23f" stroke="#1d1b3a" stroke-width="6" stroke-linejoin="round"/>
+</svg>
