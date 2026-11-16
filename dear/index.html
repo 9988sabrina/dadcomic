@@ -40,13 +40,13 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
 <body>
 <div id="boot" role="status" aria-live="polite">
   <div class="boot-inner">
-    <img src="img/hosts/miao-cut.webp" width="372" height="1072" alt="">
     <p><span data-show="en">Opening</span><span data-show="zh">翻开</span></p>
     <div class="boot-line" aria-hidden="true"><span id="boot-bar"></span></div>
   </div>
 </div>
 <div id="cursor" aria-hidden="true"></div>
 <canvas id="starfield" aria-hidden="true"></canvas>
+<canvas id="rise-layer" aria-hidden="true"></canvas>
 <div class="grade" aria-hidden="true"></div>
 <div class="turn" aria-hidden="true"></div>
 <a class="sr" href="#wall">Skip to the wall</a>
@@ -86,10 +86,10 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     <h2 class="cast-title"><span data-split data-show="en">Four of them. One very loud afternoon.</span><span data-split data-show="zh">四个人。一个很吵的下午。</span></h2>
     <div class="cast-layers">
       <div class="layer sun" aria-hidden="true"></div>
-      <img class="layer char dad" src="img/hosts/dad-cut.webp" width="360" height="1093" alt="Dad, in a flame helmet and black jacket, skating.">
-      <img class="layer char dory" src="img/hosts/dory-cut.webp" width="351" height="1050" alt="Dory, the older sister, headphones around her neck.">
-      <img class="layer char p" src="img/hosts/p-cut.webp" width="674" height="968" alt="P, ten years old, arms open in a pink skating dress.">
-      <img class="layer char miao" src="img/hosts/miao-cut.webp" width="372" height="1072" alt="Miao Sando, a slim white cat in a black suit and sunglasses.">
+      <img class="layer char dad" src="img/hosts/dad-cut.webp" width="360" height="1093" alt="Dad, in a flame helmet and black jacket, skating." loading="lazy" decoding="async">
+      <img class="layer char dory" src="img/hosts/dory-cut.webp" width="351" height="1050" alt="Dory, the older sister, headphones around her neck." loading="lazy" decoding="async">
+      <img class="layer char p" src="img/hosts/p-cut.webp" width="674" height="968" alt="P, ten years old, arms open in a pink skating dress." loading="lazy" decoding="async">
+      <img class="layer char miao" src="img/hosts/miao-cut.webp" width="372" height="1072" alt="Miao Sando, a slim white cat in a black suit and sunglasses." loading="lazy" decoding="async">
       <p class="who p"><span data-show="en">Let me try it. I’ll fall, then I’ll know.</span><span data-show="zh">让我自己试试。摔倒了，我就懂了。</span></p>
       <p class="who dad"><span data-show="en">I’m not just handy. I’m nuts about repairs.</span><span data-show="zh">我不只会修。我是螺母级的。</span></p>
       <p class="who dory"><span data-show="en">Dad. The helmet is not a personality.</span><span data-show="zh">爸。头盔不是性格。</span></p>
@@ -106,7 +106,7 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
 <div class="banner"><span data-show="en">Prototype. Every note on this wall is a sample we wrote, so you can see the layout. None of them were posted by a visitor.</span><span data-show="zh">这是原型。墙上这些话都是我们写的示例，用来看版式。没有一条是访客发布的。</span></div>
 
 <main>
-<section id="wall"><div class="wrap">
+<section id="wall"><div class="sky-well" aria-hidden="true"></div><div class="wrap">
   <h2 data-split data-i18n="wallTitle">The wall</h2>
   <p class="lead" data-i18n="wallLede">Sample letters and drawings. Filter by where Dad is, and by language. Country counts are samples too.</p>
   <div class="filters" role="group" aria-label="Filters">

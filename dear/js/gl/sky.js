@@ -82,12 +82,36 @@ export function mountSky(canvas, quality) {
   const phases = new Float32Array(count);
   const sizes = new Float32Array(count);
   for (let i = 0; i < count; i += 1) {
-    positions[i * 3] = Math.random() * 2 - 1;
-    positions[i * 3 + 1] = Math.random() * 2 - 1;
+    const layer = i % 3;
+    positions[i * 3] = Math.random() * 2.4 - 1.2;
+    positions[i * 3 + 1] = Math.random() * 2.2 - 1.05;
     positions[i * 3 + 2] = 0;
     phases[i] = Math.random() * Math.PI * 2;
-    sizes[i] = quality.mobile ? 6 + Math.random() * 8 : 8 + Math.random() * 14;
+    const base = layer === 0 ? 3 : layer === 1 ? 9 : 18;
+    sizes[i] = (quality.mobile ? 0.9 : 1.45) * (base + Math.random() * base);
   }
+  const milk = document.createElement("canvas");
+  milk.width = 512;
+  milk.height = 256;
+  const mctx = milk.getContext("2d");
+  const band = mctx.createRadialGradient(256, 140, 10, 256, 150, 240);
+  band.addColorStop(0, "rgba(255, 228, 186, 0.42)");
+  band.addColorStop(0.4, "rgba(176, 156, 214, 0.16)");
+  band.addColorStop(1, "rgba(20, 24, 46, 0)");
+  mctx.fillStyle = band;
+  mctx.fillRect(0, 0, 512, 256);
+  const milkTex = new THREE.CanvasTexture(milk);
+  milkTex.colorSpace = THREE.SRGBColorSpace;
+  const milkMat = new THREE.MeshBasicMaterial({
+    map: milkTex,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    opacity: 0.9,
+  });
+  const milkMesh = new THREE.Mesh(new THREE.PlaneGeometry(2.3, 0.72), milkMat);
+  milkMesh.position.set(0, 0.55, -0.2);
+  scene.add(milkMesh);
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
   geo.setAttribute("aPhase", new THREE.BufferAttribute(phases, 1));
@@ -158,7 +182,7 @@ export function mountSky(canvas, quality) {
     uniforms: {
       tSharp: { value: null },
       tBloom: { value: null },
-      uBloom: { value: quality.bloom ? 1.15 : 0.35 },
+      uBloom: { value: quality.bloom ? 0.85 : 0.45 },
     },
     vertexShader: blurVert,
     fragmentShader: compFrag,
@@ -182,6 +206,22 @@ export function mountSky(canvas, quality) {
   let running = false;
   const rising = [];
   const lit = [];
+  const trail = [];
+  const trailMax = 80;
+  const trailPos = new Float32Array(trailMax * 3);
+  const trailSize = new Float32Array(trailMax);
+  const trailGeo = new THREE.BufferGeometry();
+  trailGeo.setAttribute("position", new THREE.BufferAttribute(trailPos, 3));
+  trailGeo.setAttribute("aPhase", new THREE.BufferAttribute(new Float32Array(trailMax), 1));
+  trailGeo.setAttribute("aSize", new THREE.BufferAttribute(trailSize, 1));
+  trailGeo.setDrawRange(0, 0);
+  const trailMat = starMat.clone();
+  trailMat.uniforms = {
+    uMap: starMat.uniforms.uMap,
+    uNight: { value: 1 },
+    uTime: starMat.uniforms.uTime,
+  };
+  scene.add(new THREE.Points(trailGeo, trailMat));
 
   function target(scale = 1) {
     const w = Math.max(2, Math.floor(canvas.clientWidth * quality.dpr * scale));
@@ -231,22 +271,45 @@ export function mountSky(canvas, quality) {
     if (!running) return;
     const t = performance.now() / 1000;
     starMat.uniforms.uTime.value = t;
-    starMat.uniforms.uNight.value = night;
-    points.position.set(pointerX * 0.045 + scroll * 0.00004, pointerY * 0.03, 0);
+    starMat.uniforms.uNight.value = Math.max(night, rising.length || trail.length ? 0.85 : 0);
+    milkMat.opacity = night * 0.7;
+    points.position.set(pointerX * 0.06 + scroll * 0.00005, pointerY * 0.04, 0);
+    milkMesh.position.x = pointerX * 0.08;
     for (let i = rising.length - 1; i >= 0; i -= 1) {
       const s = rising[i];
-      s.y += 0.012;
-      s.x += Math.sin(t * 2 + s.p) * 0.0015;
+      s.y += 0.032;
+      s.x += Math.sin(t * 2 + s.p) * 0.002;
       litPositions[s.index * 3] = s.x;
       litPositions[s.index * 3 + 1] = s.y;
+      litSizes[s.index] = s.size * (1.15 + Math.sin(t * 6) * 0.12);
+      if (trail.length > trailMax - 2) trail.shift();
+      trail.push({ x: s.x, y: s.y - 0.015, life: 1, size: s.size * 0.7 });
       if (s.y > s.goal) {
         lit[s.index].x = s.x;
-        lit[s.index].y = Math.min(0.92, s.y);
+        lit[s.index].y = Math.min(0.9, s.y);
+        lit[s.index].size = s.size * 0.72;
         rising.splice(i, 1);
       }
     }
-    if (rising.length) litGeo.attributes.position.needsUpdate = true;
-    const alive = night > 0.02 || rising.length || lit.length;
+    for (let i = trail.length - 1; i >= 0; i -= 1) {
+      trail[i].life -= 0.04;
+      trail[i].y -= 0.002;
+      if (trail[i].life <= 0) trail.splice(i, 1);
+    }
+    for (let i = 0; i < trail.length; i += 1) {
+      trailPos[i * 3] = trail[i].x;
+      trailPos[i * 3 + 1] = trail[i].y;
+      trailSize[i] = trail[i].size * trail[i].life;
+    }
+    trailGeo.attributes.position.needsUpdate = true;
+    trailGeo.attributes.aSize.needsUpdate = true;
+    trailGeo.setDrawRange(0, trail.length);
+    if (rising.length) {
+      litGeo.attributes.position.needsUpdate = true;
+      litGeo.attributes.aSize.needsUpdate = true;
+    }
+    paintRise();
+    const alive = night > 0.02 || rising.length || lit.length || trail.length;
     if (!alive) {
       renderer.setRenderTarget(null);
       renderer.clear();
@@ -287,13 +350,43 @@ export function mountSky(canvas, quality) {
     }
   }
 
+  const riseCanvas = document.getElementById("rise-layer");
+  const riseCtx = riseCanvas?.getContext("2d");
+  function sizeRise() {
+    if (!riseCanvas) return;
+    const dpr = quality.dpr;
+    riseCanvas.width = Math.floor(riseCanvas.clientWidth * dpr);
+    riseCanvas.height = Math.floor(riseCanvas.clientHeight * dpr);
+  }
+  function paintRise() {
+    if (!riseCtx || !riseCanvas) return;
+    riseCtx.clearRect(0, 0, riseCanvas.width, riseCanvas.height);
+    const dots = trail.map((p) => ({ x: p.x, y: p.y, s: p.size * p.life, a: p.life * 0.55 }));
+    rising.forEach((s) => dots.push({ x: s.x, y: s.y, s: s.size * 1.15, a: 1 }));
+    const dpr = quality.dpr;
+    dots.forEach((dot) => {
+      const sx = ((dot.x + 1) / 2) * riseCanvas.width;
+      const sy = ((1 - dot.y) / 2) * riseCanvas.height;
+      const radius = dot.s * dpr * 1.6;
+      const g = riseCtx.createRadialGradient(sx, sy, 0, sx, sy, radius);
+      g.addColorStop(0, `rgba(255, 250, 236, ${dot.a})`);
+      g.addColorStop(0.25, `rgba(255, 214, 140, ${dot.a * 0.7})`);
+      g.addColorStop(1, "rgba(255, 214, 140, 0)");
+      riseCtx.fillStyle = g;
+      riseCtx.beginPath();
+      riseCtx.arc(sx, sy, radius, 0, Math.PI * 2);
+      riseCtx.fill();
+    });
+  }
+  sizeRise();
   resize();
-  window.addEventListener("resize", resize);
+  window.addEventListener("resize", () => { resize(); sizeRise(); });
 
   return {
     setNight(n) {
       night = Math.max(0, Math.min(1, n));
       canvas.style.opacity = night > 0.02 || rising.length || lit.length ? "1" : "0";
+      document.documentElement.classList.toggle("night", night > 0.35 || rising.length > 0);
       if (night > 0.02 || lit.length) ensure();
     },
     setPointer(x, y) {
@@ -306,7 +399,7 @@ export function mountSky(canvas, quality) {
     seed(n) {
       lit.length = 0;
       for (let i = 0; i < Math.min(48, n); i += 1) {
-        pushLit(Math.random() * 1.6 - 0.8, 0.15 + Math.random() * 0.75, quality.mobile ? 16 : 22);
+        pushLit(Math.random() * 1.6 - 0.8, 0.05 + Math.random() * 0.8, quality.mobile ? 28 : 42);
       }
       if (n) ensure();
     },
@@ -314,15 +407,18 @@ export function mountSky(canvas, quality) {
       const nx = (x / Math.max(1, window.innerWidth)) * 2 - 1;
       const ny = -((y / Math.max(1, window.innerHeight)) * 2 - 1);
       const index = lit.length;
-      pushLit(nx, ny, quality.mobile ? 18 : 26);
+      const size = quality.mobile ? 34 : 42;
+      pushLit(nx, ny, size);
       rising.push({
         index,
         x: nx,
         y: ny,
-        goal: 0.25 + Math.random() * 0.6,
+        goal: 0.55 + Math.random() * 0.3,
         p: Math.random() * 6,
+        size,
       });
       canvas.style.opacity = "1";
+      document.documentElement.classList.add("night");
       ensure();
     },
     dim() {

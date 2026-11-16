@@ -309,36 +309,36 @@ function boot() {
     hide();
     return;
   }
-  const started = performance.now();
   const setBar = (n) => { if (bar) bar.style.width = `${Math.round(n * 100)}%`; };
-  const cap = window.setTimeout(hide, 1600);
-  preload((n) => setBar(n * 0.85)).then(() => {
+  window.setTimeout(hide, 900);
+  const cover = new Image();
+  cover.onload = cover.onerror = () => {
     setBar(1);
-    const wait = Math.max(0, 600 - (performance.now() - started));
-    window.setTimeout(() => {
-      window.clearTimeout(cap);
-      hide();
-      const launch = () => {
-        import("./gl/studio.js").then(async ({ startStudio }) => {
-          const studio = await startStudio();
-          if (studio?.book) {
-            bookApi = studio.book;
-            bookApi.setProgress(bookProgress);
-          }
-          if (studio?.sky) {
-            skyApi.impl = studio.sky;
-            skyApi.seed(litCount());
-            if (document.getElementById("wall")?.classList.contains("tone-heaven")) skyApi.setNight(1);
-          }
-          if (!skyApi.impl) skyApi.impl = makeSky(document.getElementById("starfield"));
-        }).catch(() => {
-          if (!skyApi.impl) skyApi.impl = makeSky(document.getElementById("starfield"));
-        });
-      };
-      if ("requestIdleCallback" in window) window.requestIdleCallback(launch, { timeout: 1200 });
-      else window.setTimeout(launch, 400);
-    }, wait);
-  });
+    window.setTimeout(hide, 280);
+  };
+  cover.src = "img/cover.webp";
+  const launch = () => {
+    import("./gl/studio.js").then(async ({ startStudio }) => {
+      const studio = await startStudio();
+      if (studio?.book) {
+        bookApi = studio.book;
+        bookApi.setProgress(bookProgress);
+      }
+      if (studio?.sky) {
+        skyApi.impl = studio.sky;
+        skyApi.seed(litCount());
+        if (document.getElementById("wall")?.classList.contains("tone-heaven")) skyApi.setNight(1);
+      }
+      if (!skyApi.impl) skyApi.impl = makeSky(document.getElementById("starfield"));
+    }).catch(() => {
+      if (!skyApi.impl) skyApi.impl = makeSky(document.getElementById("starfield"));
+    });
+  };
+  const afterPaint = () => {
+    window.setTimeout(launch, 4000);
+  };
+  if (document.readyState === "complete") requestAnimationFrame(afterPaint);
+  else window.addEventListener("load", () => requestAnimationFrame(afterPaint), { once: true });
 }
 
 export function initMotion() {

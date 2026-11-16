@@ -2,31 +2,169 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.m
 
 const COVER = "img/cover.webp";
 
-function paperTexture(lines, sub) {
+function loadImage(src) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+}
+
+function fiber(ctx, w, h, alpha) {
+  const grain = document.createElement("canvas");
+  grain.width = 96;
+  grain.height = 96;
+  const g = grain.getContext("2d");
+  const data = g.createImageData(96, 96);
+  for (let i = 0; i < data.data.length; i += 4) {
+    const v = 210 + Math.random() * 45;
+    data.data[i] = v;
+    data.data[i + 1] = v - 6;
+    data.data[i + 2] = v - 18;
+    data.data[i + 3] = 255;
+  }
+  g.putImageData(data, 0, 0);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = ctx.createPattern(grain, "repeat");
+  ctx.fillRect(0, 0, w, h);
+  ctx.restore();
+}
+
+function gutter(ctx, w, h, fromRight) {
+  const grad = ctx.createLinearGradient(fromRight ? w : 0, 0, fromRight ? w * 0.72 : w * 0.28, 0);
+  grad.addColorStop(0, "rgba(48, 32, 18, .38)");
+  grad.addColorStop(1, "rgba(48, 32, 18, 0)");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+}
+
+function studioBackdrop() {
   const canvas = document.createElement("canvas");
   canvas.width = 1024;
-  canvas.height = 1472;
+  canvas.height = 1024;
   const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "#f7f1e6";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = "rgba(20,24,43,.18)";
-  ctx.lineWidth = 3;
-  ctx.strokeRect(56, 56, canvas.width - 112, canvas.height - 112);
-  ctx.fillStyle = "#14182b";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  lines.forEach((line, i) => {
-    ctx.font = line.font;
-    ctx.fillText(line.text, canvas.width / 2, line.y);
-  });
-  if (sub) {
-    ctx.font = "500 28px Fraunces, 'Noto Serif SC', serif";
-    ctx.fillStyle = "rgba(20,24,43,.55)";
-    ctx.fillText(sub, canvas.width / 2, 1320);
-  }
+  const sky = ctx.createRadialGradient(520, 390, 40, 512, 460, 680);
+  sky.addColorStop(0, "#f7ecda");
+  sky.addColorStop(0.42, "#e7d3b6");
+  sky.addColorStop(0.72, "#4a5374");
+  sky.addColorStop(1, "#14182e");
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, 1024, 1024);
+  const wash = ctx.createLinearGradient(0, 0, 1024, 1024);
+  wash.addColorStop(0, "rgba(255, 214, 170, .28)");
+  wash.addColorStop(0.5, "rgba(255, 214, 170, 0)");
+  wash.addColorStop(1, "rgba(80, 110, 160, .2)");
+  ctx.fillStyle = wash;
+  ctx.fillRect(0, 0, 1024, 1024);
+  fiber(ctx, 1024, 1024, 0.08);
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 8;
+  return tex;
+}
+
+function endpaperTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 900;
+  canvas.height = 1294;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.fillStyle = "#ecd9bf";
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = "rgba(20, 24, 43, .16)";
+  ctx.lineWidth = 1.5;
+  for (let y = 24; y < h; y += 32) {
+    for (let x = 24; x < w; x += 32) {
+      ctx.beginPath();
+      ctx.moveTo(x, y - 7);
+      ctx.lineTo(x + 7, y);
+      ctx.lineTo(x, y + 7);
+      ctx.lineTo(x - 7, y);
+      ctx.closePath();
+      ctx.stroke();
+    }
+  }
+  fiber(ctx, w, h, 0.22);
+  gutter(ctx, w, h, true);
+  ctx.strokeStyle = "rgba(20, 24, 43, .28)";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(36, 36, w - 72, h - 72);
+  ctx.fillStyle = "rgba(20, 24, 43, .18)";
+  ctx.font = "500 72px Fraunces, Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.fillText("My Super Dad", w / 2 + 2, 612);
+  ctx.fillStyle = "#14182b";
+  ctx.fillText("My Super Dad", w / 2, 608);
+  ctx.font = "500 52px 'Noto Serif SC', serif";
+  ctx.fillStyle = "rgba(20, 24, 43, .18)";
+  ctx.fillText("说给爸爸听", w / 2 + 2, 708);
+  ctx.fillStyle = "#14182b";
+  ctx.fillText("说给爸爸听", w / 2, 704);
+  ctx.font = "500 24px Fraunces, Georgia, serif";
+  ctx.fillStyle = "rgba(20, 24, 43, .62)";
+  ctx.fillText("Art by Phoebie Wang", w / 2, 1188);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  tex.needsUpdate = true;
+  return tex;
+}
+
+async function comicPageTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 900;
+  canvas.height = 1294;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.fillStyle = "#f4eadc";
+  ctx.fillRect(0, 0, w, h);
+  fiber(ctx, w, h, 0.28);
+  gutter(ctx, w, h, false);
+  ctx.strokeStyle = "rgba(20, 24, 43, .55)";
+  ctx.lineWidth = 4;
+  ctx.strokeRect(48, 48, w - 96, h - 96);
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(62, 62, w - 124, h - 124);
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(78, 520, w - 156, 690);
+  ctx.clip();
+  ctx.fillStyle = "#d7ecf6";
+  ctx.fillRect(78, 520, w - 156, 690);
+  const files = [
+    ["img/hosts/dad-cut.webp", 250, 560, 280],
+    ["img/hosts/dory-cut.webp", 430, 640, 250],
+    ["img/hosts/p-cut.webp", 40, 760, 280],
+    ["img/hosts/miao-cut.webp", 620, 820, 200],
+  ];
+  const pics = await Promise.all(files.map(([src]) => loadImage(src)));
+  pics.forEach((img, i) => {
+    if (!img) return;
+    const [, x, y, height] = files[i];
+    const width = height * (img.width / img.height);
+    ctx.drawImage(img, x, y, width, height);
+  });
+  ctx.restore();
+  ctx.strokeStyle = "#14182b";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(78, 520, w - 156, 690);
+  const ink = (text, y, font) => {
+    ctx.font = font;
+    ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(40, 24, 16, .22)";
+    ctx.fillText(text, w / 2 + 1.5, y + 2);
+    ctx.fillStyle = "#14182b";
+    ctx.fillText(text, w / 2, y);
+  };
+  ink("Say what you", 250, "500 68px Fraunces, Georgia, serif");
+  ink("never said.", 330, "500 68px Fraunces, Georgia, serif");
+  ink("说出从没说出口的话", 430, "500 42px 'Noto Serif SC', serif");
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
   tex.needsUpdate = true;
   return tex;
 }
@@ -73,7 +211,7 @@ export async function mountBook(canvas, quality) {
     antialias: !quality.mobile,
     powerPreference: "high-performance",
   });
-  renderer.setClearColor(0x000000, 0);
+  renderer.setClearColor(0x14182e, 1);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.setPixelRatio(quality.dpr);
   if (quality.shadows) {
@@ -99,17 +237,9 @@ export async function mountBook(canvas, quality) {
     }, undefined, reject);
   });
 
-  const backMap = paperTexture([
-    { text: "My Super Dad", font: "500 78px Fraunces, Georgia, serif", y: 640 },
-    { text: "说给爸爸听", font: "500 64px 'Noto Serif SC', serif", y: 760 },
-  ], "Art by Phoebie Wang");
-
-  const pageMap = paperTexture([
-    { text: "Say what you", font: "500 72px Fraunces, Georgia, serif", y: 520 },
-    { text: "never said.", font: "500 72px Fraunces, Georgia, serif", y: 620 },
-    { text: "说出从没", font: "500 64px 'Noto Serif SC', serif", y: 790 },
-    { text: "说出口的话", font: "500 64px 'Noto Serif SC', serif", y: 890 },
-  ], "");
+  const backMap = endpaperTexture();
+  const pageMap = await comicPageTexture();
+  scene.background = studioBackdrop();
 
   const curl = new THREE.ShaderMaterial({
     uniforms: {
@@ -130,10 +260,38 @@ export async function mountBook(canvas, quality) {
   root.add(cover);
 
   const page = new THREE.Mesh(
-    new THREE.PlaneGeometry(W, H),
-    new THREE.MeshBasicMaterial({ map: pageMap }),
+    new THREE.PlaneGeometry(W, H, 24, 8),
+    new THREE.ShaderMaterial({
+      uniforms: { uMap: { value: pageMap }, uSheen: { value: 0.15 } },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          vec3 p = position;
+          float dip = exp(-uv.x * 5.5) * 0.045;
+          float bow = sin(uv.x * 3.14159) * 0.012;
+          p.z -= dip + bow;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D uMap;
+        uniform float uSheen;
+        varying vec2 vUv;
+        void main() {
+          vec4 color = texture2D(uMap, vUv);
+          float sheen = smoothstep(0.0, 0.12, vUv.y - uSheen) * smoothstep(0.28, 0.08, vUv.y - uSheen);
+          sheen *= smoothstep(0.15, 0.7, vUv.x);
+          color.rgb += sheen * 0.16;
+          float gutter = exp(-vUv.x * 7.0);
+          color.rgb *= 1.0 - gutter * 0.28;
+          gl_FragColor = color;
+        }
+      `,
+    }),
   );
-  page.position.set(W / 2, 0, -0.02);
+  page.geometry.translate(W / 2, 0, 0);
+  page.position.z = -0.02;
   root.add(page);
 
   const board = new THREE.Mesh(
@@ -166,9 +324,12 @@ export async function mountBook(canvas, quality) {
     key.shadow.bias = -0.0006;
   }
   scene.add(key);
-  const fill = new THREE.DirectionalLight(0xd7e4f5, 0.28);
+  const fill = new THREE.DirectionalLight(0xd7e4f5, 0.35);
   fill.position.set(-3, 1.2, 2);
   scene.add(fill);
+  const rim = new THREE.DirectionalLight(0xf0c9a0, 0.45);
+  rim.position.set(-1.6, 2.2, -2.4);
+  scene.add(rim);
 
   const shadowCanvas = document.createElement("canvas");
   shadowCanvas.width = 512;
@@ -185,7 +346,7 @@ export async function mountBook(canvas, quality) {
     new THREE.MeshBasicMaterial({ map: shadowMap, transparent: true, depthWrite: false }),
   );
   shadow.rotation.x = -Math.PI / 2;
-  shadow.position.set(W / 2, -H / 2 - 0.04, 0.12);
+  shadow.position.set(W / 2, -H / 2 - 0.11, 0.2);
   root.add(shadow);
   if (quality.shadows) {
     const catcher = new THREE.Mesh(
@@ -209,16 +370,21 @@ export async function mountBook(canvas, quality) {
   function fit() {
     const aspect = width / Math.max(1, height);
     const fov = (camera.fov * Math.PI) / 180;
-    const spread = W * 2 * 1.12;
-    const zW = (spread / 2) / (Math.tan(fov / 2) * Math.max(0.35, aspect));
-    const zH = (H * 1.28) / 2 / Math.tan(fov / 2);
-    const zOpen = Math.max(zW, zH);
-    const zClosed = zOpen * 0.78;
+    const margin = aspect < 0.8 ? 1.78 : 1.62;
+    const zFor = (spanW, spanH) => Math.max(
+      (spanW / 2) / (Math.tan(fov / 2) * Math.max(0.42, aspect)),
+      (spanH / 2) / Math.tan(fov / 2),
+    );
+    const zClosed = zFor(W * margin, H * margin);
+    const zOpen = zFor(W * 2 * margin * 0.94, H * margin);
     const swing = Math.sin(Math.min(1, open) * Math.PI);
-    const z = (zClosed + (zOpen - zClosed) * open) * (1 + swing * 0.28);
+    const z = zClosed + (zOpen - zClosed) * open + swing * zClosed * 0.08;
+    const navShift = Math.min(0.22, 78 / height);
+    const visH = 2 * z * Math.tan(fov / 2);
+    const lookY = -navShift * visH * 0.42;
     camera.aspect = aspect;
-    camera.position.set((1 - open) * 0.34 + nx * 0.06, (1 - open) * 0.16 + ny * 0.04, z);
-    camera.lookAt((1 - open) * 0.02, -0.02, 0);
+    camera.position.set((1 - open) * 0.22 + nx * 0.05, lookY + (1 - open) * 0.05, z);
+    camera.lookAt((1 - open) * 0.02, lookY, 0);
     camera.updateProjectionMatrix();
     root.position.x = -W / 2 * (1 - open) + swing * W * 0.12;
     curl.uniforms.uOpen.value = open;

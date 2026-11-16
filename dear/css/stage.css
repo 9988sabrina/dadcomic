@@ -1,17 +1,24 @@
 #boot {
   position: fixed;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 22px;
   z-index: 80;
   display: grid;
   place-items: center;
-  background: #101426;
-  color: #f4efe6;
-  transition: opacity .6s ease, visibility .6s ease;
+  background: transparent;
+  pointer-events: none;
+  transition: opacity .45s ease, visibility .45s ease;
 }
-#boot.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
-.boot-inner { text-align: center; }
-.boot-inner img { width: auto; height: 132px; margin: 0 auto 12px; object-fit: contain; filter: drop-shadow(0 12px 24px rgba(0,0,0,.35)); }
-.boot-inner p { margin: 0 0 14px; letter-spacing: .22em; text-transform: uppercase; font-size: 12px; }
+#boot.is-done { opacity: 0; visibility: hidden; }
+.boot-inner {
+  text-align: center;
+  background: rgba(16, 20, 38, .88);
+  color: #f4efe6;
+  border-radius: 14px;
+  padding: 10px 16px 12px;
+}
+.boot-inner p { margin: 0 0 8px; letter-spacing: .22em; text-transform: uppercase; font-size: 11px; }
 .boot-line { width: 160px; height: 2px; margin: 0 auto; background: rgba(244,239,230,.2); overflow: hidden; }
 .boot-line span { display: block; height: 100%; width: 0; background: #e7c27a; transition: width .25s ease; }
 html:not(.will-motion) .boot-line span { width: 100%; }
@@ -34,7 +41,18 @@ html.fine #cursor { display: block; }
 #starfield {
   position: fixed;
   inset: 0;
-  z-index: 4;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+html.night #starfield {
+  background: radial-gradient(ellipse at 50% 18%, #4a3b74 0%, #1a1e38 38%, #070910 100%);
+}
+#rise-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -42,12 +60,12 @@ html.fine #cursor { display: block; }
 .grade {
   position: fixed;
   inset: 0;
-  z-index: 6;
+  z-index: 3;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 52%, rgba(16, 20, 38, .28) 100%);
+  background: radial-gradient(ellipse at center, transparent 58%, rgba(16, 20, 38, .16) 100%);
   opacity: 0;
 }
-html.will-motion .grade { opacity: 1; }
+html.will-motion .grade { opacity: .55; }
 .grade::after {
   content: "";
   position: absolute;
@@ -298,10 +316,15 @@ html.fine .letter-card:hover::before { opacity: 1; }
 #wall {
   position: relative;
   z-index: 1;
-  background: rgba(12, 16, 32, .78);
+  background: rgba(12, 16, 32, .72);
   color: #f4efe6;
   border-radius: 0;
 }
+.sky-well { display: none; }
+#wall.tone-heaven {
+  background: linear-gradient(180deg, rgba(8, 10, 28, .18) 0%, rgba(8, 10, 28, .42) 36%, rgba(8, 12, 28, .78) 100%);
+}
+#wall.tone-heaven .sky-well { display: block; height: 38vh; }
 #wall .lead, #wall h2, #wall .help { color: #f4efe6; }
 #wall .filters button, #wall .count-list button {
   color: #f4efe6;

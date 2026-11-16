@@ -5,7 +5,7 @@ function quality() {
   return {
     mobile,
     dpr: Math.min(dprCap, window.devicePixelRatio || 1),
-    stars: mobile ? 70 : 180,
+    stars: mobile ? 110 : 260,
     segments: mobile ? [20, 4] : [42, 6],
     shadows: !mobile,
     bloom: !mobile,
