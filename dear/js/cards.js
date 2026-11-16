@@ -121,6 +121,12 @@ export function bindCardActions(root, lookup) {
       btn.setAttribute("aria-pressed", on ? "true" : "false");
       btn.textContent = on ? t("starLit") : t("lightStar");
       paintSky();
+      if (on) {
+        const rect = btn.getBoundingClientRect();
+        document.dispatchEvent(new CustomEvent("dear-star", {
+          detail: { x: rect.left + rect.width / 2, y: rect.top },
+        }));
+      }
       return;
     }
     if (btn.dataset.action === "react") {
