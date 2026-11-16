@@ -2,16 +2,6 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.m
 
 const COVER = "img/cover.webp";
 
-function loadImage(src) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => resolve(img);
-    img.onerror = () => resolve(null);
-    img.src = src;
-  });
-}
-
 function fiber(ctx, w, h, alpha) {
   const grain = document.createElement("canvas");
   grain.width = 96;
@@ -114,32 +104,16 @@ function endpaperTexture() {
   return tex;
 }
 
-async function comicPageTexture() {
-  const img = await loadImage("../img/art/comic_page.webp");
-  const canvas = document.createElement("canvas");
-  canvas.width = 900;
-  canvas.height = 1294;
-  const ctx = canvas.getContext("2d");
-  const w = canvas.width;
-  const h = canvas.height;
-  ctx.fillStyle = "#f3e7d4";
-  ctx.fillRect(0, 0, w, h);
-  if (img) {
-    const scale = Math.min(w / img.width, h / img.height);
-    const dw = img.width * scale;
-    const dh = img.height * scale;
-    ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
-  }
-  ctx.save();
-  ctx.globalCompositeOperation = "multiply";
-  fiber(ctx, w, h, 0.55);
-  ctx.restore();
-  gutter(ctx, w, h, false);
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 8;
-  tex.needsUpdate = true;
-  return tex;
+function loadTexture(src) {
+  return new Promise((resolve, reject) => {
+    const loader = new THREE.TextureLoader();
+    loader.setCrossOrigin("anonymous");
+    loader.load(src, (tex) => {
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 8;
+      resolve(tex);
+    }, undefined, reject);
+  });
 }
 
 const curlVert = `
@@ -211,7 +185,7 @@ export async function mountBook(canvas, quality) {
   });
 
   const backMap = endpaperTexture();
-  const pageMap = await comicPageTexture();
+  const pageMap = await loadTexture("../img/art/comic_page.webp");
   scene.background = studioBackdrop();
 
   const curl = new THREE.ShaderMaterial({
@@ -253,9 +227,11 @@ export async function mountBook(canvas, quality) {
         varying vec2 vUv;
         void main() {
           vec4 color = texture2D(uMap, vUv);
+          float grain = fract(sin(dot(vUv, vec2(12.9898, 78.233))) * 43758.5453);
+          color.rgb *= 0.92 + grain * 0.08;
           float sheen = smoothstep(0.0, 0.12, vUv.y - uSheen) * smoothstep(0.28, 0.08, vUv.y - uSheen);
           sheen *= smoothstep(0.15, 0.7, vUv.x);
-          color.rgb += sheen * 0.16;
+          color.rgb += sheen * 0.1;
           float gutter = exp(-vUv.x * 7.0);
           color.rgb *= 1.0 - gutter * 0.28;
           gl_FragColor = color;
