@@ -2,7 +2,10 @@ import { countryName, listPublicEntries } from "./api.js";
 import { bindCardActions, mountCard } from "./cards.js";
 import { initForm } from "./form.js";
 import { applyI18n, getLang, onLang, setLang, t } from "./i18n.js";
+import { initMotion, revealCards } from "./motion.js";
 import { bindShareDialog } from "./share.js";
+import { initSound } from "./sound.js";
+import { paintSky } from "./stars.js";
 
 const state = {
   entries: [],
@@ -49,6 +52,8 @@ function render() {
   }
   wall.dataset.count = String(shown.length);
   document.getElementById("wall").classList.toggle("tone-heaven", state.presence === "heaven");
+  paintSky();
+  revealCards();
 
   const counts = new Map();
   base.forEach((entry) => {
@@ -95,7 +100,12 @@ async function main() {
   applyI18n();
   bindChrome();
   initForm();
-  onLang(render);
+  initSound();
+  initMotion();
+  onLang(() => {
+    render();
+    paintSky();
+  });
   try {
     state.entries = await listPublicEntries();
     render();

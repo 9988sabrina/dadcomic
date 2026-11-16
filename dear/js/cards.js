@@ -2,6 +2,7 @@ import { countryName, mediaUrl } from "./api.js";
 import { t, getLang } from "./i18n.js";
 import { displayCount, isOn, toggleReaction } from "./reactions.js";
 import { openShareDialog } from "./share.js";
+import { isLit, paintSky, toggleStar } from "./stars.js";
 
 function el(tag, attrs, children) {
   const node = document.createElement(tag);
@@ -50,12 +51,8 @@ export function mountCard(entry, options = {}) {
   const showReactions = options.reactions !== false;
   const zh = entry.lang === "zh";
   const salute = zh ? `${entry.salutation}：` : `${entry.salutation},`;
-  const sfx = entry.presence === "heaven"
-    ? (getLang() === "zh" ? "星" : "STAR")
-    : (getLang() === "zh" ? "嘿" : "HI!");
   const kids = [
     el("div", { class: "panel-bar" }, [
-      el("span", { class: "sfx-chip", "aria-hidden": "true" }, [sfx]),
       el("span", { class: `pill ${entry.presence}` }, [entry.presence === "heaven" ? t("heaven") : t("living")]),
       entry.sample ? el("span", { class: "sample-pill" }, [t("sample")]) : null,
       el("span", { class: "lang-pill" }, [entry.lang === "zh" ? "中文" : "EN"]),
@@ -72,11 +69,20 @@ export function mountCard(entry, options = {}) {
       }),
     ]));
   }
-  kids.push(el("div", { class: "bubble" }, [
+  kids.push(el("div", { class: "letter bubble" }, [
     el("p", { class: "salute" }, [salute]),
     el("p", { class: "body" }, [entry.text]),
   ]));
   kids.push(el("p", { class: "meta" }, [countryName(entry.countryCode, getLang())]));
+  if (entry.presence === "heaven") {
+    const lit = isLit(entry.id);
+    kids.push(el("button", {
+      type: "button",
+      class: "star-light",
+      "data-action": "star",
+      "aria-pressed": lit ? "true" : "false",
+    }, [lit ? t("starLit") : t("lightStar")]));
+  }
   if (showReactions) {
     kids.push(el("div", { class: "reacts" }, [
       reactionButton(entry, "heart", "❤️", "reactHeart"),
@@ -93,7 +99,8 @@ export function mountCard(entry, options = {}) {
   }
   if (actions.length) kids.push(el("div", { class: "card-actions" }, actions));
   return el("article", {
-    class: `card panel ${entry.kind} ${entry.presence}`,
+    class: `card panel letter-card ${entry.kind} ${entry.presence}`,
+    "data-reveal": "1",
     "data-id": entry.id,
   }, kids);
 }
@@ -107,6 +114,13 @@ export function bindCardActions(root, lookup) {
     if (!entry) return;
     if (btn.dataset.action === "share") {
       openShareDialog(entry);
+      return;
+    }
+    if (btn.dataset.action === "star") {
+      const on = toggleStar(entry.id);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.textContent = on ? t("starLit") : t("lightStar");
+      paintSky();
       return;
     }
     if (btn.dataset.action === "react") {
