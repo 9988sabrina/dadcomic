@@ -114,7 +114,7 @@ function endpaperTexture() {
 }
 
 async function comicPageTexture() {
-  const img = await loadImage("/img/art/comic_page.webp");
+  const img = await loadImage("../img/art/comic_page.webp");
   const canvas = document.createElement("canvas");
   canvas.width = 900;
   canvas.height = 1294;

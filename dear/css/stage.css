@@ -50,7 +50,7 @@ html.fine #cursor { display: block; }
   position: fixed;
   inset: -8%;
   z-index: 0;
-  background: #0c1024 url("/img/art/night_sky.webp") center 42% / cover no-repeat;
+  background: #0c1024 url("../../img/art/night_sky.webp") center 42% / cover no-repeat;
   opacity: 0;
   pointer-events: none;
   transform: scale(1.08);
