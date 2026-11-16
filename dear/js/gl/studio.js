@@ -37,8 +37,8 @@ export async function startStudio() {
     ]);
   }
   const [{ mountBook }, { mountSky }] = await Promise.all([
-    import("./book.js"),
-    import("./sky.js"),
+    import("./book.js?v=4"),
+    import("./sky.js?v=4"),
   ]);
   let book = null;
   let sky = null;

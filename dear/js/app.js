@@ -2,7 +2,7 @@ import { countryName, listPublicEntries } from "./api.js";
 import { bindCardActions, mountCard } from "./cards.js";
 import { initForm } from "./form.js";
 import { applyI18n, getLang, onLang, setLang, t } from "./i18n.js";
-import { initMotion, revealCards } from "./motion.js";
+import { initMotion, revealCards } from "./motion.js?v=4";
 import { bindShareDialog } from "./share.js";
 import { initSound } from "./sound.js";
 import { paintSky } from "./stars.js";

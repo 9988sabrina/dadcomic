@@ -318,7 +318,7 @@ function boot() {
   };
   cover.src = "img/cover.webp";
   const launch = () => {
-    import("./gl/studio.js").then(async ({ startStudio }) => {
+    import("./gl/studio.js?v=4").then(async ({ startStudio }) => {
       const studio = await startStudio();
       if (studio?.book) {
         bookApi = studio.book;
