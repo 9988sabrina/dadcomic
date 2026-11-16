@@ -1,10 +1,10 @@
 import { countryName, mediaUrl } from "./api.js";
 import { t } from "./i18n.js";
 
-const INK = "#1d1b3a";
+const INK = "#141414";
 const SUN = "#ffd23f";
 const PAPER = "#fffdf6";
-const RED = "#e63946";
+const RED = "#e23b4a";
 
 const RATIOS = {
   "9:16": { w: 1080, h: 1920 },
@@ -61,18 +61,23 @@ function wrap(ctx, text, maxWidth) {
 
 async function loadFonts() {
   const jobs = [
-    document.fonts.load("104px Bangers"),
+    document.fonts.load("120px Bangers"),
+    document.fonts.load("64px 'ZCOOL KuaiLe'"),
     document.fonts.load("700 60px Fredoka"),
     document.fonts.load("600 46px Fredoka"),
-    document.fonts.load("700 40px 'Noto Sans SC'"),
+    document.fonts.load("700 48px 'Noto Sans SC'"),
     document.fonts.load("600 46px 'Noto Sans SC'"),
   ];
-  await Promise.all(jobs);
+  await Promise.all(jobs.map((job) => job.catch(() => {})));
   await document.fonts.ready;
 }
 
 function font(weight, size) {
-  return `${weight} ${size}px Fredoka, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif`;
+  return `${weight} ${size}px Fredoka, "ZCOOL KuaiLe", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif`;
+}
+
+function displayFont(size) {
+  return `${size}px Bangers, "ZCOOL KuaiLe", "Noto Sans SC", Impact, sans-serif`;
 }
 
 function loadImage(src) {
@@ -84,242 +89,226 @@ function loadImage(src) {
   });
 }
 
-function drawBackground(ctx, w, h, heaven) {
-  const g = ctx.createLinearGradient(0, 0, w * 0.2, h);
-  if (heaven) {
-    g.addColorStop(0, "#8d92e8");
-    g.addColorStop(0.38, "#3d3a86");
-    g.addColorStop(1, "#1d1b3a");
-  } else {
-    g.addColorStop(0, "#b6ecff");
-    g.addColorStop(0.42, "#3fb4f5");
-    g.addColorStop(1, "#1565c0");
-  }
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, w, h);
-  if (heaven) {
-    const stars = [
-      [90, 180], [980, 140], [860, 320], [70, 520], [1000, 640],
-      [180, 860], [940, 980], [120, 1200], [980, 1400], [200, 1600],
-    ];
-    ctx.fillStyle = "rgba(255,255,255,.9)";
-    for (const [x, y] of stars) {
-      if (y > h - 40) continue;
+function halftone(ctx, w, h, color) {
+  ctx.fillStyle = color;
+  for (let y = 16; y < h; y += 22) {
+    for (let x = 12; x < w; x += 22) {
       ctx.beginPath();
-      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.arc(x, y, 1.6, 0, Math.PI * 2);
       ctx.fill();
     }
-  } else {
-    ctx.save();
-    ctx.translate(w * 0.82, h * 0.08);
-    for (let i = 0; i < 16; i += 1) {
-      ctx.rotate(Math.PI / 8);
-      ctx.fillStyle = i % 2 ? "rgba(255,210,63,.35)" : "rgba(255,255,255,.18)";
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.lineTo(28, 520);
-      ctx.lineTo(-28, 520);
-      ctx.fill();
-    }
-    ctx.restore();
   }
 }
 
-function drawLogo(ctx, w, y) {
-  const logo = "MY SUPER DAD";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "alphabetic";
-  ctx.font = "104px Bangers, Impact, sans-serif";
+function inkText(ctx, text, x, y, fill) {
   ctx.lineJoin = "round";
   ctx.miterLimit = 2;
-  ctx.lineWidth = 16;
+  ctx.lineWidth = 12;
   ctx.strokeStyle = INK;
-  ctx.fillStyle = INK;
-  ctx.strokeText(logo, w / 2 + 8, y + 8);
-  ctx.fillText(logo, w / 2 + 8, y + 8);
-  ctx.strokeText(logo, w / 2, y);
-  ctx.fillStyle = SUN;
-  ctx.fillText(logo, w / 2, y);
+  ctx.strokeText(text, x, y);
+  ctx.fillStyle = fill;
+  ctx.fillText(text, x, y);
 }
 
-function drawImageContain(ctx, img, x, y, w, h) {
-  roundRect(ctx, x, y, w, h, 20);
+function drawTail(ctx, x, y, heaven) {
   ctx.fillStyle = "#fff";
-  ctx.fill();
-  ctx.save();
-  roundRect(ctx, x, y, w, h, 20);
-  ctx.clip();
-  const ir = img.width / img.height || 1;
-  const r = w / h;
-  let dw;
-  let dh;
-  let dx;
-  let dy;
-  if (ir > r) {
-    dw = w;
-    dh = w / ir;
-    dx = x;
-    dy = y + (h - dh) / 2;
-  } else {
-    dh = h;
-    dw = h * ir;
-    dy = y;
-    dx = x + (w - dw) / 2;
-  }
-  ctx.drawImage(img, dx, dy, dw, dh);
-  ctx.restore();
-  roundRect(ctx, x, y, w, h, 20);
-  ctx.lineWidth = 6;
   ctx.strokeStyle = INK;
+  ctx.lineWidth = 8;
+  if (heaven) {
+    ctx.beginPath();
+    ctx.arc(x + 36, y + 8, 18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(x + 8, y + 36, 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    return;
+  }
+  ctx.beginPath();
+  ctx.moveTo(x + 36, y - 8);
+  ctx.lineTo(x + 18, y + 36);
+  ctx.lineTo(x + 70, y + 6);
+  ctx.closePath();
+  ctx.fill();
   ctx.stroke();
+}
+
+function fitLines(ctx, text, maxWidth, maxHeight, start) {
+  let size = start;
+  let lines = [""];
+  let lineH = size * 1.35;
+  while (size >= 30) {
+    ctx.font = font(600, size);
+    lines = wrap(ctx, text, maxWidth);
+    lineH = Math.round(size * 1.38);
+    if (lines.length * lineH <= maxHeight) break;
+    size -= 2;
+  }
+  return { size, lines, lineH };
 }
 
 function paint(ctx, spec, entry, img) {
   const { w, h } = spec;
   const heaven = entry.presence === "heaven";
   const zh = entry.lang === "zh";
-  drawBackground(ctx, w, h, heaven);
-
   const tall = h > 1600;
-  let y = tall ? 150 : 120;
-  drawLogo(ctx, w, y);
-  y += tall ? 58 : 50;
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#fff";
-  ctx.font = font(700, tall ? 40 : 34);
-  ctx.fillText("Dear Super Dad · 说给爸爸听", w / 2, y);
-  y += tall ? 52 : 44;
-  ctx.font = font(600, tall ? 34 : 30);
-  ctx.fillText(zh ? "那些没说出口的话，说给爸爸听。" : "Say what you never said.", w / 2, y);
-  y += tall ? 46 : 36;
 
-  const pad = 72;
-  const footerBlock = tall ? 210 : 180;
-  const panelX = pad;
-  const panelY = y;
-  const panelW = w - pad * 2;
-  const panelH = h - footerBlock - panelY;
+  const sky = ctx.createLinearGradient(0, 0, 0, h);
+  if (heaven) {
+    sky.addColorStop(0, "#d9d4ff");
+    sky.addColorStop(1, "#8e88c9");
+  } else {
+    sky.addColorStop(0, "#b9ecff");
+    sky.addColorStop(1, "#3aa0e6");
+  }
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, w, h);
+  halftone(ctx, w, h, heaven ? "rgba(44,42,110,.28)" : "rgba(20,20,20,.18)");
 
-  roundRect(ctx, panelX + 14, panelY + 14, panelW, panelH, 32);
+  const margin = 36;
+  roundRect(ctx, margin + 12, margin + 12, w - margin * 2, h - margin * 2, 18);
   ctx.fillStyle = INK;
   ctx.fill();
-  roundRect(ctx, panelX, panelY, panelW, panelH, 32);
-  ctx.fillStyle = PAPER;
+  roundRect(ctx, margin, margin, w - margin * 2, h - margin * 2, 18);
+  ctx.fillStyle = heaven ? "#f7f4ff" : PAPER;
+  ctx.fill();
+  ctx.lineWidth = 14;
+  ctx.strokeStyle = INK;
+  ctx.stroke();
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "alphabetic";
+  ctx.font = displayFont(tall ? 92 : 78);
+  inkText(ctx, "MY SUPER DAD", w / 2, margin + (tall ? 110 : 96), SUN);
+
+  ctx.font = displayFont(tall ? 40 : 34);
+  ctx.fillStyle = INK;
+  ctx.fillText(zh ? "说给爸爸听" : "DEAR DAD!", w / 2, margin + (tall ? 164 : 146));
+
+  const footerH = 78;
+  const bubbleX = margin + 48;
+  const bubbleW = w - margin * 2 - 96;
+  let bubbleY = margin + (tall ? 196 : 172);
+  const room = h - margin - footerH - bubbleY - 28;
+  let bubbleH = room;
+
+  if (entry.kind === "drawing" && img) {
+    const frameH = Math.round(room * 0.56);
+    roundRect(ctx, bubbleX, bubbleY, bubbleW, frameH, 12);
+    ctx.fillStyle = "#fff";
+    ctx.fill();
+    ctx.save();
+    roundRect(ctx, bubbleX, bubbleY, bubbleW, frameH, 12);
+    ctx.clip();
+    const ir = img.width / img.height || 1;
+    const r = bubbleW / frameH;
+    let dw;
+    let dh;
+    let dx;
+    let dy;
+    if (ir > r) {
+      dh = frameH;
+      dw = frameH * ir;
+      dy = bubbleY;
+      dx = bubbleX + (bubbleW - dw) / 2;
+    } else {
+      dw = bubbleW;
+      dh = bubbleW / ir;
+      dx = bubbleX;
+      dy = bubbleY + (frameH - dh) / 2;
+    }
+    ctx.drawImage(img, dx, dy, dw, dh);
+    ctx.restore();
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = INK;
+    roundRect(ctx, bubbleX, bubbleY, bubbleW, frameH, 12);
+    ctx.stroke();
+    bubbleY += frameH + 28;
+    bubbleH = h - margin - footerH - bubbleY - 24;
+  } else {
+    ctx.font = font(600, tall ? 46 : 38);
+    const preview = wrap(ctx, entry.text, bubbleW - 80);
+    const lineH = Math.round((tall ? 46 : 38) * 1.38);
+    bubbleH = Math.min(room, 150 + preview.length * lineH + 90);
+  }
+
+  roundRect(ctx, bubbleX, bubbleY, bubbleW, bubbleH, heaven ? 80 : 36);
+  ctx.fillStyle = "#fff";
   ctx.fill();
   ctx.lineWidth = 8;
   ctx.strokeStyle = INK;
   ctx.stroke();
+  drawTail(ctx, bubbleX + 24, bubbleY + bubbleH - 6, heaven);
 
-  const innerX = panelX + 52;
-  const innerW = panelW - 104;
-  let ty = panelY + 78;
-
+  const innerX = bubbleX + 40;
+  const innerW = bubbleW - 80;
   const pill = zh ? (heaven ? "⭐ 在天上" : "🌤️ 还在身边") : (heaven ? "⭐ In heaven" : "🌤️ Living");
-  ctx.font = font(700, 32);
+  ctx.font = font(700, 30);
   ctx.textAlign = "left";
-  const pillW = ctx.measureText(pill).width + 40;
-  roundRect(ctx, innerX, ty - 38, pillW, 54, 27);
-  ctx.fillStyle = heaven ? "#2a2a72" : SUN;
+  const pillW = ctx.measureText(pill).width + 36;
+  roundRect(ctx, innerX, bubbleY + 28, pillW, 48, 24);
+  ctx.fillStyle = heaven ? "#2c2a6e" : SUN;
   ctx.fill();
   ctx.lineWidth = 4;
   ctx.strokeStyle = INK;
   ctx.stroke();
   ctx.fillStyle = heaven ? "#fff" : INK;
-  ctx.fillText(pill, innerX + 20, ty);
+  ctx.fillText(pill, innerX + 18, bubbleY + 60);
 
   if (entry.sample) {
     const mark = zh ? "示例" : "SAMPLE";
-    ctx.font = zh ? font(700, 30) : "40px Bangers, Impact, sans-serif";
-    const mw = ctx.measureText(mark).width + 36;
-    const mx = panelX + panelW - 52 - mw;
-    roundRect(ctx, mx, ty - 38, mw, 54, 14);
+    ctx.font = zh ? font(700, 28) : displayFont(36);
+    const mw = ctx.measureText(mark).width + 28;
+    const mx = bubbleX + bubbleW - 36 - mw;
+    roundRect(ctx, mx, bubbleY + 28, mw, 48, 10);
     ctx.fillStyle = RED;
     ctx.fill();
-    ctx.lineWidth = 4;
     ctx.strokeStyle = INK;
     ctx.stroke();
     ctx.fillStyle = "#fff";
     ctx.textAlign = "center";
-    ctx.fillText(mark, mx + mw / 2, ty + (zh ? 0 : 4));
+    ctx.fillText(mark, mx + mw / 2, bubbleY + 62);
+    ctx.textAlign = "left";
   }
 
-  ty += 78;
   const salute = zh ? `${entry.salutation}：` : `${entry.salutation},`;
-  const saluteSize = tall ? 58 : 48;
-  const place = entry.countryName || entry.countryCode || "";
-  const countryY = panelY + panelH - 52;
-  const contentBottom = countryY - 36;
-
-  if (entry.kind === "drawing" && img) {
-    ctx.textAlign = "left";
-    ctx.fillStyle = INK;
-    ctx.font = font(700, saluteSize);
-    ctx.fillText(salute, innerX, ty);
-    ty += tall ? 28 : 22;
-    ctx.font = font(600, tall ? 34 : 30);
-    const capLines = entry.text ? wrap(ctx, entry.text, innerW) : [];
-    const capH = capLines.length * (tall ? 48 : 42);
-    const imgTop = ty + 24;
-    const imgH = Math.max(160, contentBottom - imgTop - capH - (capLines.length ? 20 : 0));
-    drawImageContain(ctx, img, innerX, imgTop, innerW, imgH);
-    let cy = imgTop + imgH + (tall ? 44 : 38);
-    ctx.fillStyle = INK;
-    ctx.textAlign = "left";
-    ctx.font = font(600, tall ? 34 : 30);
-    for (const line of capLines) {
-      if (cy > contentBottom) break;
-      ctx.fillText(line, innerX, cy);
-      cy += tall ? 48 : 42;
-    }
-  } else {
-    const regionTop = ty;
-    const regionBottom = panelY + panelH - 64;
-    const available = regionBottom - regionTop;
-    let size = tall ? 52 : 42;
-    let lines = [];
-    let lineH = size * 1.45;
-    while (size >= 30) {
-      ctx.font = font(600, size);
-      lines = wrap(ctx, entry.text, innerW);
-      lineH = Math.round(size * 1.45);
-      const block = saluteSize + 36 + lines.length * lineH + 64;
-      if (block <= available) break;
-      size -= 2;
-    }
-    const block = saluteSize + 36 + lines.length * lineH + 64;
-    const extra = Math.max(0, available - block);
-    let cursor = regionTop + extra * 0.45;
-    ctx.textAlign = "left";
-    ctx.fillStyle = INK;
-    ctx.font = font(700, saluteSize);
-    cursor += saluteSize;
-    ctx.fillText(salute, innerX, cursor);
-    cursor += 36;
-    ctx.font = font(600, size);
-    for (const line of lines) {
-      cursor += lineH;
-      ctx.fillText(line, innerX, cursor);
-    }
-    ctx.font = font(600, 30);
-    ctx.fillStyle = "#3a3866";
-    ctx.fillText(place, innerX, cursor + 52);
+  const textTop = bubbleY + 108;
+  const textBottom = bubbleY + bubbleH - 36;
+  const available = textBottom - textTop - 70;
+  const fitted = fitLines(ctx, entry.text, innerW, Math.max(80, available), tall ? 46 : 38);
+  ctx.fillStyle = INK;
+  ctx.font = font(700, tall ? 48 : 40);
+  ctx.fillText(salute, innerX, textTop + 8);
+  ctx.font = font(600, fitted.size);
+  let ly = textTop + 8 + fitted.lineH + 8;
+  for (const line of fitted.lines) {
+    if (ly > textBottom - 40) break;
+    ctx.fillText(line, innerX, ly);
+    ly += fitted.lineH;
   }
+  ctx.font = font(700, 28);
+  ctx.fillStyle = "#242424";
+  ctx.fillText(entry.countryName || "", innerX, Math.min(ly + 36, textBottom));
 
-  if (entry.kind === "drawing" && img) {
-    ctx.font = font(600, 30);
-    ctx.fillStyle = "#3a3866";
-    ctx.textAlign = "left";
-    ctx.fillText(place, innerX, countryY);
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(margin + 20, bubbleY + bubbleH + 24, w - margin * 2 - 40, h - margin - footerH - (bubbleY + bubbleH + 24));
+  ctx.clip();
+  ctx.fillStyle = heaven ? "rgba(44,42,110,.2)" : "rgba(20,20,20,.14)";
+  for (let y = bubbleY + bubbleH + 36; y < h; y += 18) {
+    for (let x = margin + 36; x < w - margin; x += 18) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1.7, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
+  ctx.restore();
 
-  const brand = zh ? "每个爸爸，都是某个人的超人。" : "Every dad is somebody's super dad.";
   ctx.textAlign = "center";
-  ctx.fillStyle = "#fffdf6";
-  ctx.font = font(700, tall ? 36 : 32);
-  ctx.fillText(brand, w / 2, h - (tall ? 118 : 100));
-  ctx.font = font(600, 28);
-  ctx.fillStyle = SUN;
-  ctx.fillText("dadcomic.com/dear  ·  My Super Dad", w / 2, h - (tall ? 64 : 54));
+  ctx.font = font(700, 30);
+  ctx.fillStyle = INK;
+  ctx.fillText("dadcomic.com/dear", w / 2, h - margin - 36);
 }
 
 export async function renderShareCard(entry, ratio) {

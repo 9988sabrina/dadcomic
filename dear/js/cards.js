@@ -50,24 +50,32 @@ export function mountCard(entry, options = {}) {
   const showReactions = options.reactions !== false;
   const zh = entry.lang === "zh";
   const salute = zh ? `${entry.salutation}：` : `${entry.salutation},`;
+  const sfx = entry.presence === "heaven"
+    ? (getLang() === "zh" ? "星" : "STAR")
+    : (getLang() === "zh" ? "嘿" : "HI!");
   const kids = [
-    el("div", { class: "card-top" }, [
+    el("div", { class: "panel-bar" }, [
+      el("span", { class: "sfx-chip", "aria-hidden": "true" }, [sfx]),
       el("span", { class: `pill ${entry.presence}` }, [entry.presence === "heaven" ? t("heaven") : t("living")]),
       entry.sample ? el("span", { class: "sample-pill" }, [t("sample")]) : null,
       el("span", { class: "lang-pill" }, [entry.lang === "zh" ? "中文" : "EN"]),
     ].filter(Boolean)),
   ];
   if (entry.kind === "drawing" && entry.image) {
-    kids.push(el("img", {
-      class: "drawing",
-      src: mediaUrl(entry.image),
-      alt: altText(entry),
-      width: "800",
-      height: "800",
-    }));
+    kids.push(el("div", { class: "page-frame" }, [
+      el("img", {
+        class: "drawing",
+        src: mediaUrl(entry.image),
+        alt: altText(entry),
+        width: "800",
+        height: "800",
+      }),
+    ]));
   }
-  kids.push(el("p", { class: "salute" }, [salute]));
-  kids.push(el("p", { class: "body" }, [entry.text]));
+  kids.push(el("div", { class: "bubble" }, [
+    el("p", { class: "salute" }, [salute]),
+    el("p", { class: "body" }, [entry.text]),
+  ]));
   kids.push(el("p", { class: "meta" }, [countryName(entry.countryCode, getLang())]));
   if (showReactions) {
     kids.push(el("div", { class: "reacts" }, [
@@ -85,7 +93,7 @@ export function mountCard(entry, options = {}) {
   }
   if (actions.length) kids.push(el("div", { class: "card-actions" }, actions));
   return el("article", {
-    class: `card ${entry.kind} ${entry.presence}`,
+    class: `card panel ${entry.kind} ${entry.presence}`,
     "data-id": entry.id,
   }, kids);
 }

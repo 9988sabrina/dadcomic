@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="260" viewBox="0 0 200 260" role="img">
+  <title>Placeholder silhouette of P</title>
+  <rect width="200" height="260" fill="#fffdf6"/>
+  <circle cx="70" cy="70" r="22" fill="#5b3a29"/>
+  <circle cx="130" cy="70" r="22" fill="#5b3a29"/>
+  <circle cx="100" cy="58" r="26" fill="#5b3a29"/>
+  <circle cx="100" cy="92" r="30" fill="#ffd7b5" stroke="#1d1b3a" stroke-width="6"/>
+  <circle cx="90" cy="90" r="3" fill="#1d1b3a"/>
+  <circle cx="110" cy="90" r="3" fill="#1d1b3a"/>
+  <path d="M90 104 Q100 112 110 104" fill="none" stroke="#1d1b3a" stroke-width="4" stroke-linecap="round"/>
+  <path d="M78 128 L100 150 L122 128 L116 200 L84 200 Z" fill="#ff8fb8" stroke="#1d1b3a" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M88 200 L80 240 M112 200 L120 240" stroke="#1d1b3a" stroke-width="7" stroke-linecap="round"/>
+  <rect x="18" y="222" width="164" height="26" rx="6" fill="#ffd23f" stroke="#1d1b3a" stroke-width="4"/>
+  <text x="100" y="240" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="13" font-weight="700" fill="#1d1b3a">PLACEHOLDER</text>
+</svg>

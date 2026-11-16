@@ -48,6 +48,7 @@ function render() {
     shown.forEach((entry) => wall.append(mountCard(entry)));
   }
   wall.dataset.count = String(shown.length);
+  document.getElementById("wall").classList.toggle("tone-heaven", state.presence === "heaven");
 
   const counts = new Map();
   base.forEach((entry) => {

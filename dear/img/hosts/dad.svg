@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="260" viewBox="0 0 200 260" role="img">
+  <title>Placeholder silhouette of Dad</title>
+  <rect width="200" height="260" fill="#fffdf6"/>
+  <path d="M48 150 L100 118 L152 150 L140 210 L60 210 Z" fill="#1d1b3a"/>
+  <path d="M46 146 L28 200 L62 188 Z" fill="#e63946"/>
+  <circle cx="100" cy="78" r="34" fill="#ffd7b5" stroke="#1d1b3a" stroke-width="6"/>
+  <rect x="74" y="72" width="22" height="12" rx="3" fill="#1d1b3a"/>
+  <rect x="104" y="72" width="22" height="12" rx="3" fill="#1d1b3a"/>
+  <path d="M78 98 Q100 112 122 98" fill="none" stroke="#1d1b3a" stroke-width="4" stroke-linecap="round"/>
+  <path d="M70 210 L58 246 M130 210 L142 246" stroke="#1d1b3a" stroke-width="8" stroke-linecap="round"/>
+  <rect x="18" y="222" width="164" height="26" rx="6" fill="#ffd23f" stroke="#1d1b3a" stroke-width="4"/>
+  <text x="100" y="240" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="13" font-weight="700" fill="#1d1b3a">PLACEHOLDER</text>
+</svg>
