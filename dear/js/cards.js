@@ -126,6 +126,8 @@ export function bindCardActions(root, lookup) {
         document.dispatchEvent(new CustomEvent("dear-star", {
           detail: { x: rect.left + rect.width / 2, y: rect.top },
         }));
+      } else {
+        document.dispatchEvent(new CustomEvent("dear-sky-dim"));
       }
       return;
     }

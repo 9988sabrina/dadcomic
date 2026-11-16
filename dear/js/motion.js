@@ -1,4 +1,19 @@
-let sky = null;
+import { onLang } from "./i18n.js";
+import { litCount } from "./stars.js";
+
+const skyApi = {
+  impl: null,
+  setNight(n) { this.impl?.setNight(n); },
+  rise(x, y) { this.impl?.rise(x, y); },
+  seed(n) { this.impl?.seed?.(n); },
+  dim() { this.impl?.dim?.(); },
+  setPointer(x, y) { this.impl?.setPointer?.(x, y); },
+  setScroll(y) { this.impl?.setScroll?.(y); },
+};
+let bookApi = null;
+let bookProgress = 0;
+let pointerX = 0;
+let pointerY = 0;
 
 function reduced() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -98,7 +113,7 @@ function cursor() {
     requestAnimationFrame(loop);
   }
   loop();
-  document.querySelectorAll("a, button").forEach((el) => {
+  document.querySelectorAll(".buy, .lang-btn, .btn").forEach((el) => {
     el.addEventListener("pointermove", (event) => {
       const rect = el.getBoundingClientRect();
       const dx = event.clientX - (rect.left + rect.width / 2);
@@ -128,10 +143,23 @@ function dragRail() {
     rail.setPointerCapture(event.pointerId);
   });
   rail.addEventListener("pointermove", (event) => {
+    const card = event.target.closest?.(".letter-card");
+    if (card && !active && finePointer() && !reduced()) {
+      const rect = card.getBoundingClientRect();
+      const px = (event.clientX - rect.left) / rect.width - 0.5;
+      const py = (event.clientY - rect.top) / rect.height - 0.5;
+      card.style.setProperty("--mx", `${((event.clientX - rect.left) / rect.width) * 100}%`);
+      card.style.setProperty("--my", `${((event.clientY - rect.top) / rect.height) * 100}%`);
+      card.style.transform = `perspective(900px) rotateX(${(-py * 6).toFixed(2)}deg) rotateY(${(px * 8).toFixed(2)}deg) translateY(-4px)`;
+    }
     if (!active) return;
     const dx = event.clientX - startX;
     if (Math.abs(dx) > 8) moved = true;
     rail.scrollLeft = origin - dx;
+  });
+  rail.addEventListener("pointerleave", (event) => {
+    const card = event.target.closest?.(".letter-card");
+    if (card) card.style.transform = "";
   });
   rail.addEventListener("pointerup", () => { active = false; });
   rail.addEventListener("click", (event) => {
@@ -152,7 +180,7 @@ function dragRail() {
     const m = document.createElement("p");
     m.textContent = meta;
     host.append(h, p, m);
-    reader.hidden = false;
+    openReader(card, reader, host);
   });
   document.getElementById("reader-close")?.addEventListener("click", () => {
     document.getElementById("reader").hidden = true;
@@ -173,15 +201,144 @@ function pageTurn() {
   });
 }
 
+function openReader(card, reader, host) {
+  reader.hidden = false;
+  if (reduced()) return;
+  const from = card.getBoundingClientRect();
+  const to = host.getBoundingClientRect();
+  const ghost = card.cloneNode(true);
+  ghost.className = "flip-ghost letter-card";
+  ghost.style.left = `${from.left}px`;
+  ghost.style.top = `${from.top}px`;
+  ghost.style.width = `${from.width}px`;
+  ghost.style.height = `${from.height}px`;
+  document.body.append(ghost);
+  host.style.opacity = "0";
+  requestAnimationFrame(() => {
+    ghost.style.transition = "left .55s cubic-bezier(.2,.7,.2,1), top .55s cubic-bezier(.2,.7,.2,1), width .55s cubic-bezier(.2,.7,.2,1), height .55s cubic-bezier(.2,.7,.2,1), opacity .4s ease";
+    ghost.style.left = `${to.left}px`;
+    ghost.style.top = `${to.top}px`;
+    ghost.style.width = `${to.width}px`;
+    ghost.style.height = `${to.height}px`;
+    ghost.style.opacity = "0.15";
+    host.style.transition = "opacity .4s ease .25s";
+    host.style.opacity = "1";
+  });
+  window.setTimeout(() => ghost.remove(), 600);
+}
+
+function splitCopy(root) {
+  if (reduced()) return;
+  root.querySelectorAll("[data-split]").forEach((node) => {
+    if (node.querySelector(".ch")) return;
+    const text = node.textContent;
+    node.setAttribute("aria-label", text);
+    node.textContent = "";
+    const cjk = /[\u3400-\u9fff]/.test(text);
+    const words = cjk ? [text] : text.split(/(\s+)/);
+    let index = 0;
+    words.forEach((word) => {
+      const hold = document.createElement("span");
+      hold.style.display = "inline-block";
+      hold.style.whiteSpace = "nowrap";
+      const chars = typeof Intl !== "undefined" && Intl.Segmenter
+        ? [...new Intl.Segmenter(undefined, { granularity: "grapheme" }).segment(word)].map((part) => part.segment)
+        : Array.from(word);
+      chars.forEach((ch) => {
+        const span = document.createElement("span");
+        span.className = "ch";
+        span.style.animationDelay = `${Math.min(index, 28) * 14}ms`;
+        span.textContent = ch === " " ? "\u00a0" : ch;
+        hold.append(span);
+        index += 1;
+      });
+      node.append(hold);
+    });
+  });
+}
+
+function watchCopy() {
+  const nodes = [...document.querySelectorAll("[data-split]")];
+  if (!nodes.length || reduced()) return;
+  splitCopy(document);
+  const heads = [...new Set(nodes.map((node) => node.closest("h2") || node))];
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-in");
+    });
+  }, { threshold: 0.45 });
+  heads.forEach((node) => io.observe(node));
+  onLang(() => {
+    splitCopy(document);
+    heads.forEach((node) => {
+      if (!node.classList.contains("is-in")) return;
+      node.classList.remove("is-in");
+      requestAnimationFrame(() => node.classList.add("is-in"));
+    });
+  });
+}
+
+function preload(onStep) {
+  const sources = [
+    "img/cover.webp",
+    "img/hosts/dad-cut.webp",
+    "img/hosts/p-cut.webp",
+    "img/hosts/dory-cut.webp",
+    "img/hosts/miao-cut.webp",
+  ];
+  let done = 0;
+  return Promise.all(sources.map((src) => new Promise((resolve) => {
+    const img = new Image();
+    img.onload = img.onerror = () => {
+      done += 1;
+      onStep(done / sources.length);
+      resolve();
+    };
+    img.src = src;
+  })));
+}
+
 function boot() {
   const el = document.getElementById("boot");
+  const bar = document.getElementById("boot-bar");
   if (!el) return;
   const hide = () => el.classList.add("is-done");
   if (reduced()) {
+    if (bar) bar.style.width = "100%";
     hide();
     return;
   }
-  window.setTimeout(hide, 900);
+  const started = performance.now();
+  const setBar = (n) => { if (bar) bar.style.width = `${Math.round(n * 100)}%`; };
+  const cap = window.setTimeout(hide, 1600);
+  preload((n) => setBar(n * 0.85)).then(() => {
+    setBar(1);
+    const wait = Math.max(0, 600 - (performance.now() - started));
+    window.setTimeout(() => {
+      window.clearTimeout(cap);
+      hide();
+      const launch = () => {
+        import("./gl/studio.js").then(async ({ startStudio }) => {
+          const studio = await startStudio();
+          if (studio?.book) {
+            bookApi = studio.book;
+            bookApi.setProgress(bookProgress);
+          }
+          if (studio?.sky) {
+            skyApi.impl = studio.sky;
+            skyApi.seed(litCount());
+            if (document.getElementById("wall")?.classList.contains("tone-heaven")) skyApi.setNight(1);
+          }
+          if (!skyApi.impl) skyApi.impl = makeSky(document.getElementById("starfield"));
+        }).catch(() => {
+          if (!skyApi.impl) skyApi.impl = makeSky(document.getElementById("starfield"));
+        });
+      };
+      if ("requestIdleCallback" in window) window.requestIdleCallback(launch, { timeout: 1200 });
+      else window.setTimeout(launch, 400);
+    }, wait);
+  });
 }
 
 export function initMotion() {
@@ -189,11 +346,17 @@ export function initMotion() {
   dragRail();
   pageTurn();
   cursor();
-  const canvas = document.getElementById("starfield");
-  if (canvas) sky = makeSky(canvas);
-  document.addEventListener("dear-star", (event) => {
-    sky?.rise(event.detail.x, event.detail.y);
+  document.addEventListener("pointermove", (event) => {
+    pointerX = event.clientX / Math.max(1, innerWidth) - 0.5;
+    pointerY = event.clientY / Math.max(1, innerHeight) - 0.5;
+    skyApi.setPointer(pointerX, pointerY);
+    bookApi?.setPointer(pointerX, pointerY);
   });
+  document.addEventListener("dear-star", (event) => {
+    skyApi.rise(event.detail.x, event.detail.y);
+  });
+  document.addEventListener("dear-sky-dim", () => skyApi.dim());
+  watchCopy();
   if (reduced() || !window.gsap || !window.ScrollTrigger) return;
   const gsap = window.gsap;
   gsap.registerPlugin(window.ScrollTrigger);
@@ -224,6 +387,9 @@ export function initMotion() {
         cover.style.transform = `rotateY(${-168 * open}deg)`;
         book.style.transform = `translateX(${open * pageW * 0.5}px) rotateX(${6 * (1 - open)}deg)`;
         if (sheen) sheen.style.transform = `translateX(${-40 + open * 160}%)`;
+        bookProgress = p;
+        bookApi?.setProgress(p);
+        skyApi.setScroll(window.scrollY);
         const show = open > 0.92 ? 1 : 0;
         words.forEach((word, i) => {
           const start = 0.55 + i * 0.03;
@@ -260,21 +426,38 @@ export function initMotion() {
           const bubble = cast.querySelector(line);
           const arrived = p >= at;
           const focus = p >= at && p < at + 0.24;
+          const depth = { p: 18, dad: 8, dory: 12, miao: 22 };
           if (node) {
             const y = arrived ? 0 : 28;
             const s = focus ? 1.04 : 1;
-            node.style.transform = `translate3d(0, ${y}px, 0) scale(${s})`;
+            const name = node.classList.contains("p") ? "p"
+              : node.classList.contains("dad") ? "dad"
+                : node.classList.contains("dory") ? "dory" : "miao";
+            const dx = pointerX * depth[name];
+            const dy = pointerY * depth[name] * 0.35;
+            node.style.transform = `translate3d(${dx}px, ${y + dy}px, 0) scale(${s})`;
           }
           if (bubble) {
+            const name = bubble.classList.contains("p") ? "p"
+              : bubble.classList.contains("dad") ? "dad"
+                : bubble.classList.contains("dory") ? "dory" : "miao";
+            const dx = pointerX * depth[name];
+            const dy = pointerY * depth[name] * 0.35;
             bubble.style.opacity = "1";
-            bubble.style.transform = focus ? "scale(1.04)" : "scale(1)";
+            bubble.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(${focus ? 1.04 : 1})`;
           }
         });
-        sky?.setNight(Math.max(0, (p - 0.82) / 0.18) * 0.35);
+        skyApi.setNight(Math.max(0, (p - 0.82) / 0.18) * 0.35);
       },
     });
   }
 
+  gsap.fromTo("#chapter-cast .cast-layers", { scale: 1.06, y: 36 }, {
+    scale: 1,
+    y: 0,
+    ease: "none",
+    scrollTrigger: { trigger: "#chapter-cast", start: "top bottom", end: "top top", scrub: true },
+  });
   gsap.from(".night-pin h2", {
     y: 30,
     duration: 1,
@@ -283,5 +466,5 @@ export function initMotion() {
 }
 
 export function revealCards() {
-  if (sky && document.getElementById("wall")?.classList.contains("tone-heaven")) sky.setNight(1);
+  if (document.getElementById("wall")?.classList.contains("tone-heaven")) skyApi.setNight(1);
 }

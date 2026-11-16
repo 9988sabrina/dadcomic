@@ -38,6 +38,10 @@ export function toggleStar(id) {
   return on;
 }
 
+export function litCount() {
+  return load().length;
+}
+
 export function paintSky() {
   const sky = document.getElementById("night-sky");
   const stars = document.getElementById("night-stars");
