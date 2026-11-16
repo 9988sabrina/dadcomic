@@ -46,9 +46,51 @@ html.fine #cursor { display: block; }
   height: 100%;
   pointer-events: none;
 }
-html.night #starfield {
-  background: radial-gradient(ellipse at 50% 18%, #4a3b74 0%, #1a1e38 38%, #070910 100%);
+#painted-sky {
+  position: fixed;
+  inset: -8%;
+  z-index: 0;
+  background: #0c1024 url("/img/art/night_sky.webp") center 42% / cover no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.08);
+  will-change: transform;
 }
+html.night #painted-sky { opacity: 1; }
+#painted-sky .sky-scrim {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 68%;
+  background: linear-gradient(180deg, rgba(8, 10, 22, 0) 0%, rgba(8, 10, 22, .55) 28%, rgba(7, 9, 18, .9) 100%);
+}
+#page-zoom {
+  position: absolute;
+  z-index: 3;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 0;
+  border-radius: 999px;
+  background: #14182b;
+  color: #f4efe6;
+  padding: 10px 16px;
+  font: 500 13px Outfit, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+#page-zoom[hidden] { display: none; }
+#page-zoom-view {
+  width: min(920px, 94vw);
+  max-height: 92svh;
+  padding: 12px;
+  border: 0;
+  border-radius: 16px;
+  background: #f4efe6;
+}
+#page-zoom-view img { width: 100%; height: auto; display: block; }
+#page-zoom-view button { margin-bottom: 8px; }
 #rise-layer {
   position: fixed;
   inset: 0;

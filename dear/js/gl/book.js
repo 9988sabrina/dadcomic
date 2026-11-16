@@ -91,18 +91,19 @@ function endpaperTexture() {
   ctx.strokeStyle = "rgba(20, 24, 43, .28)";
   ctx.lineWidth = 3;
   ctx.strokeRect(36, 36, w - 72, h - 72);
-  ctx.fillStyle = "rgba(20, 24, 43, .18)";
-  ctx.font = "500 72px Fraunces, Georgia, serif";
   ctx.textAlign = "center";
-  ctx.fillText("My Super Dad", w / 2 + 2, 612);
-  ctx.fillStyle = "#14182b";
-  ctx.fillText("My Super Dad", w / 2, 608);
-  ctx.font = "500 52px 'Noto Serif SC', serif";
-  ctx.fillStyle = "rgba(20, 24, 43, .18)";
-  ctx.fillText("说给爸爸听", w / 2 + 2, 708);
-  ctx.fillStyle = "#14182b";
-  ctx.fillText("说给爸爸听", w / 2, 704);
-  ctx.font = "500 24px Fraunces, Georgia, serif";
+  const ink = (text, y, font) => {
+    ctx.font = font;
+    ctx.fillStyle = "rgba(40, 24, 16, .22)";
+    ctx.fillText(text, w / 2 + 1.5, y + 2);
+    ctx.fillStyle = "#14182b";
+    ctx.fillText(text, w / 2, y);
+  };
+  ink("My Super Dad", 520, "500 68px Fraunces, Georgia, serif");
+  ink("说给爸爸听", 600, "500 46px 'Noto Serif SC', serif");
+  ink("Say what you never said.", 760, "500 40px Fraunces, Georgia, serif");
+  ink("说出从没说出口的话", 830, "500 34px 'Noto Serif SC', serif");
+  ctx.font = "500 22px Fraunces, Georgia, serif";
   ctx.fillStyle = "rgba(20, 24, 43, .62)";
   ctx.fillText("Art by Phoebie Wang", w / 2, 1188);
   const tex = new THREE.CanvasTexture(canvas);
@@ -113,58 +114,29 @@ function endpaperTexture() {
 }
 
 async function comicPageTexture() {
+  const img = await loadImage("/img/art/comic_page.webp");
   const canvas = document.createElement("canvas");
   canvas.width = 900;
   canvas.height = 1294;
   const ctx = canvas.getContext("2d");
   const w = canvas.width;
   const h = canvas.height;
-  ctx.fillStyle = "#f4eadc";
+  ctx.fillStyle = "#f3e7d4";
   ctx.fillRect(0, 0, w, h);
-  fiber(ctx, w, h, 0.28);
-  gutter(ctx, w, h, false);
-  ctx.strokeStyle = "rgba(20, 24, 43, .55)";
-  ctx.lineWidth = 4;
-  ctx.strokeRect(48, 48, w - 96, h - 96);
-  ctx.lineWidth = 1.5;
-  ctx.strokeRect(62, 62, w - 124, h - 124);
+  if (img) {
+    const scale = Math.min(w / img.width, h / img.height);
+    const dw = img.width * scale;
+    const dh = img.height * scale;
+    ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+  }
   ctx.save();
-  ctx.beginPath();
-  ctx.rect(78, 520, w - 156, 690);
-  ctx.clip();
-  ctx.fillStyle = "#d7ecf6";
-  ctx.fillRect(78, 520, w - 156, 690);
-  const files = [
-    ["img/hosts/dad-cut.webp", 250, 560, 280],
-    ["img/hosts/dory-cut.webp", 430, 640, 250],
-    ["img/hosts/p-cut.webp", 40, 760, 280],
-    ["img/hosts/miao-cut.webp", 620, 820, 200],
-  ];
-  const pics = await Promise.all(files.map(([src]) => loadImage(src)));
-  pics.forEach((img, i) => {
-    if (!img) return;
-    const [, x, y, height] = files[i];
-    const width = height * (img.width / img.height);
-    ctx.drawImage(img, x, y, width, height);
-  });
+  ctx.globalCompositeOperation = "multiply";
+  fiber(ctx, w, h, 0.55);
   ctx.restore();
-  ctx.strokeStyle = "#14182b";
-  ctx.lineWidth = 3;
-  ctx.strokeRect(78, 520, w - 156, 690);
-  const ink = (text, y, font) => {
-    ctx.font = font;
-    ctx.textAlign = "center";
-    ctx.fillStyle = "rgba(40, 24, 16, .22)";
-    ctx.fillText(text, w / 2 + 1.5, y + 2);
-    ctx.fillStyle = "#14182b";
-    ctx.fillText(text, w / 2, y);
-  };
-  ink("Say what you", 250, "500 68px Fraunces, Georgia, serif");
-  ink("never said.", 330, "500 68px Fraunces, Georgia, serif");
-  ink("说出从没说出口的话", 430, "500 42px 'Noto Serif SC', serif");
+  gutter(ctx, w, h, false);
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 4;
+  tex.anisotropy = 8;
   tex.needsUpdate = true;
   return tex;
 }

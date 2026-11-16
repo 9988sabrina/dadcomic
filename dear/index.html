@@ -45,6 +45,7 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   </div>
 </div>
 <div id="cursor" aria-hidden="true"></div>
+<div id="painted-sky" aria-hidden="true"><div class="sky-scrim"></div></div>
 <canvas id="starfield" aria-hidden="true"></canvas>
 <canvas id="rise-layer" aria-hidden="true"></canvas>
 <div class="grade" aria-hidden="true"></div>
@@ -78,6 +79,7 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       </div>
     </div>
     <p class="scroll-hint"><span data-show="en">Scroll to open</span><span data-show="zh">向下翻开</span></p>
+    <button type="button" id="page-zoom" hidden><span data-show="en">Read the page</span><span data-show="zh">看这一页</span></button>
   </div>
 </section>
 
@@ -306,6 +308,10 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   </div>
 </dialog>
 
+<dialog id="page-zoom-view">
+  <button type="button" class="btn w" id="page-zoom-close"><span data-show="en">Close</span><span data-show="zh">关闭</span></button>
+  <img src="/img/art/comic_page.webp" width="1050" height="1400" alt="Comic page 12. Dad fixes P's bicycle, then Dory and Miao Sando score the afternoon.">
+</dialog>
 <div id="reader" hidden>
   <button type="button" class="btn w" id="reader-close"><span data-show="en">Close</span><span data-show="zh">关闭</span></button>
   <article id="reader-copy"></article>

@@ -346,12 +346,23 @@ export function initMotion() {
   dragRail();
   pageTurn();
   cursor();
+  const painted = document.getElementById("painted-sky");
+  const placeSky = () => {
+    if (!painted) return;
+    const drift = Math.sin(performance.now() / 9000) * 16;
+    painted.style.transform = `scale(1.14) translate3d(${pointerX * -26 + drift}px, ${pointerY * -12}px, 0)`;
+  };
   document.addEventListener("pointermove", (event) => {
     pointerX = event.clientX / Math.max(1, innerWidth) - 0.5;
     pointerY = event.clientY / Math.max(1, innerHeight) - 0.5;
     skyApi.setPointer(pointerX, pointerY);
     bookApi?.setPointer(pointerX, pointerY);
+    placeSky();
   });
+  const zoom = document.getElementById("page-zoom");
+  const zoomView = document.getElementById("page-zoom-view");
+  zoom?.addEventListener("click", () => zoomView?.showModal());
+  document.getElementById("page-zoom-close")?.addEventListener("click", () => zoomView?.close());
   document.addEventListener("dear-star", (event) => {
     skyApi.rise(event.detail.x, event.detail.y);
   });
@@ -389,6 +400,8 @@ export function initMotion() {
         if (sheen) sheen.style.transform = `translateX(${-40 + open * 160}%)`;
         bookProgress = p;
         bookApi?.setProgress(p);
+        const zoomBtn = document.getElementById("page-zoom");
+        if (zoomBtn) zoomBtn.hidden = !(p > 0.92 && window.matchMedia("(max-width: 780px)").matches);
         skyApi.setScroll(window.scrollY);
         const show = open > 0.92 ? 1 : 0;
         words.forEach((word, i) => {
@@ -457,6 +470,15 @@ export function initMotion() {
     y: 0,
     ease: "none",
     scrollTrigger: { trigger: "#chapter-cast", start: "top bottom", end: "top top", scrub: true },
+  });
+  window.ScrollTrigger.create({
+    trigger: ".night-pin",
+    start: "top 75%",
+    onEnter: () => skyApi.setNight(1),
+    onEnterBack: () => skyApi.setNight(1),
+    onLeaveBack: () => {
+      if (!document.getElementById("wall")?.classList.contains("tone-heaven")) skyApi.setNight(0.15);
+    },
   });
   gsap.from(".night-pin h2", {
     y: 30,

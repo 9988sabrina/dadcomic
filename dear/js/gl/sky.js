@@ -413,7 +413,7 @@ export function mountSky(canvas, quality) {
         index,
         x: nx,
         y: ny,
-        goal: 0.55 + Math.random() * 0.3,
+        goal: 0.72 + Math.random() * 0.18,
         p: Math.random() * 6,
         size,
       });
