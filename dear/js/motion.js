@@ -213,19 +213,24 @@ export function initMotion() {
     window.ScrollTrigger.create({
       trigger: "#chapter-book",
       start: "top top",
-      end: "+=160%",
+      end: "+=140%",
       pin: true,
-      scrub: 0.5,
+      scrub: 0.45,
+      snap: { snapTo: [0, 1], duration: 0.35, delay: 0.05 },
       onUpdate: (self) => {
         const p = self.progress;
-        const open = Math.min(1, p / 0.7);
-        cover.style.transform = `rotateY(${-158 * open}deg)`;
-        book.style.transform = `rotateX(${10 - p * 10}deg) translateZ(${p * 40}px)`;
-        if (sheen) sheen.style.transform = `translateX(${-30 + p * 140}%)`;
+        const open = p < 0.08 ? 0 : p > 0.92 ? 1 : Math.min(1, (p - 0.08) / 0.7);
+        const pageW = book.offsetWidth;
+        cover.style.transform = `rotateY(${-168 * open}deg)`;
+        book.style.transform = `translateX(${open * pageW * 0.5}px) rotateX(${6 * (1 - open)}deg)`;
+        if (sheen) sheen.style.transform = `translateX(${-40 + open * 160}%)`;
+        const show = open > 0.92 ? 1 : 0;
         words.forEach((word, i) => {
-          const local = Math.min(1, Math.max(0, (p - 0.42 - i * 0.035) / 0.18));
-          word.style.opacity = String(local);
-          word.style.transform = `translateY(${(1 - local) * 22}px)`;
+          const start = 0.55 + i * 0.03;
+          const local = show || (open > 0.92 ? 1 : Math.min(1, Math.max(0, (p - start) / 0.12)));
+          const settled = p > 0.92 ? 1 : local;
+          word.style.opacity = String(settled);
+          word.style.transform = settled >= 1 ? "none" : `translateY(${(1 - settled) * 16}px)`;
         });
       },
     });
@@ -233,38 +238,39 @@ export function initMotion() {
 
   const cast = document.querySelector(".cast-layers");
   if (cast) {
-    const layers = [
-      [".sun", 40],
-      [".char.dad", 70],
-      [".char.dory", 110],
-      [".char.p", 150],
-      [".char.miao", 190],
+    const beats = [
+      [".char.p", ".who.p", 0.05],
+      [".char.dad", ".who.dad", 0.28],
+      [".char.dory", ".who.dory", 0.5],
+      [".char.miao", ".who.miao", 0.72],
     ];
     window.ScrollTrigger.create({
       trigger: "#chapter-cast",
       start: "top top",
-      end: "+=140%",
+      end: "+=160%",
       pin: true,
-      scrub: 0.6,
+      scrub: 0.5,
+      snap: { snapTo: [0, 0.28, 0.5, 0.72, 1], duration: 0.35, delay: 0.06 },
       onUpdate: (self) => {
         const p = self.progress;
-        layers.forEach(([sel, dist]) => {
-          const node = cast.querySelector(sel);
-          if (node) node.style.transform = `translate3d(${(p - 0.5) * dist}px, ${p * -30}px, 0)`;
+        const sun = cast.querySelector(".sun");
+        if (sun) sun.style.transform = `translate3d(${p * -40}px, ${p * 10}px, 0)`;
+        beats.forEach(([figure, line, at]) => {
+          const node = cast.querySelector(figure);
+          const bubble = cast.querySelector(line);
+          const arrived = p >= at;
+          const focus = p >= at && p < at + 0.24;
+          if (node) {
+            const y = arrived ? 0 : 28;
+            const s = focus ? 1.04 : 1;
+            node.style.transform = `translate3d(0, ${y}px, 0) scale(${s})`;
+          }
+          if (bubble) {
+            bubble.style.opacity = "1";
+            bubble.style.transform = focus ? "scale(1.04)" : "scale(1)";
+          }
         });
-        const ink = document.querySelector(".ink-svg path");
-        if (ink) ink.style.strokeDashoffset = String(1 - Math.min(1, p * 1.3));
-        const bubble = document.querySelector(".spring-bubble");
-        if (bubble) {
-          const s = Math.min(1, Math.max(0, (p - 0.35) / 0.2));
-          const spring = s < 1 ? s * (1.4 - 0.4 * s) : 1;
-          bubble.style.transform = `scale(${0.7 + spring * 0.3})`;
-          bubble.style.opacity = String(Math.min(1, s * 1.4));
-        }
-        sky?.setNight(Math.max(0, (p - 0.45) / 0.55));
-        cast.parentElement.style.background = p > 0.5
-          ? `linear-gradient(#1a2144, #101426)`
-          : "";
+        sky?.setNight(Math.max(0, (p - 0.82) / 0.18) * 0.35);
       },
     });
   }
